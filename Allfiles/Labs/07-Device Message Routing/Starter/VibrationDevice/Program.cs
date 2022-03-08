@@ -1,5 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// Licensed under the MIT license. See LICENSE file in the project root for full
+// license information.
+
+// New features:
+// * Similar structure to previous labs
+// * Introduces code to simulate a conveyor belt temp and vibration
 
 using System;
 using Microsoft.Azure.Devices.Client;
@@ -25,7 +30,9 @@ namespace VibrationDevice
             ConsoleHelper.WriteColorMessage("Vibration sensor device app.\n", ConsoleColor.Yellow);
 
             // Connect to the IoT hub using the MQTT protocol.
-            deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Mqtt);
+            deviceClient = DeviceClient.CreateFromConnectionString(
+                deviceConnectionString,
+                TransportType.Mqtt);
 
             SendDeviceToCloudMessagesAsync();
             Console.ReadLine();
@@ -34,6 +41,12 @@ namespace VibrationDevice
         // Async method to send simulated telemetry.
         private static async void SendDeviceToCloudMessagesAsync()
         {
+            // The ConveyorBeltSimulator class is used to create a
+            // ConveyorBeltSimulator instance named `conveyor`. The `conveyor`
+            // object is first used to capture a vibration reading which is
+            // placed into a local `vibration` variable, and is then passed to
+            // the two create message methods along with the `vibration` value
+            // that was captured at the start of the interval.
             var conveyor = new ConveyorBeltSimulator(intervalInMilliseconds);
 
             // Simulate the vibration telemetry of a conveyor belt.
@@ -49,20 +62,31 @@ namespace VibrationDevice
             }
         }
 
-        private static async Task CreateTelemetryMessage(ConveyorBeltSimulator conveyor, double vibration)
+        // This method creates a JSON message string and uses the Message
+        // class to send the message, along with additional properties. Notice
+        // the sensorID property - this will be used to route the VSTel values
+        // appropriately at the IoT Hub. Also notice the beltAlert property -
+        // this is set to true if the conveyor belt haas stopped for more than 5
+        // seconds.
+        private static async Task CreateTelemetryMessage(
+            ConveyorBeltSimulator conveyor,
+            double vibration)
         {
             var telemetryDataPoint = new
             {
                 vibration = vibration,
             };
-            var telemetryMessageString = JsonConvert.SerializeObject(telemetryDataPoint);
-            var telemetryMessage = new Message(Encoding.ASCII.GetBytes(telemetryMessageString));
+            var telemetryMessageString =
+                JsonConvert.SerializeObject(telemetryDataPoint);
+            var telemetryMessage =
+                new Message(Encoding.ASCII.GetBytes(telemetryMessageString));
 
             // Add a custom application property to the message. This is used to route the message.
             telemetryMessage.Properties.Add("sensorID", "VSTel");
 
             // Send an alert if the belt has been stopped for more than five seconds.
-            telemetryMessage.Properties.Add("beltAlert", (conveyor.BeltStoppedSeconds > 5) ? "true" : "false");
+            telemetryMessage.Properties
+                .Add("beltAlert", (conveyor.BeltStoppedSeconds > 5) ? "true" : "false");
 
             Console.WriteLine($"Telemetry data: {telemetryMessageString}");
 
@@ -71,7 +95,18 @@ namespace VibrationDevice
             ConsoleHelper.WriteGreenMessage($"Telemetry sent {DateTime.Now.ToShortTimeString()}");
         }
 
-        private static async Task CreateLoggingMessage(ConveyorBeltSimulator conveyor, double vibration)
+        // This method is very similar to the CreateTelemetryMessage method.
+        // Here are the key items to note:
+        // * The loggingDataPoint contains more information than the telemetry
+        //   object. It is common to include as much information as possible for
+        //   logging purposes to assist in any fault diagnosis activities or
+        //   more detailed analytics in the future.
+        // * The logging message includes the sensorID property, this time set
+        //   to VSLog. Again, as noted above, his will be used to route the
+        //   VSLog values appropriately at the IoT Hub.
+        private static async Task CreateLoggingMessage(
+            ConveyorBeltSimulator conveyor,
+            double vibration)
         {
             // Create the logging JSON message.
             var loggingDataPoint = new
@@ -98,6 +133,10 @@ namespace VibrationDevice
         }
     }
 
+    // The ConveyorBeltSimulator class simulates the operation of a conveyor
+    // belt, modeling a number of speeds and related states to generate
+    // vibration data. The ConsoleHelper class is used to write different
+    // colored text to the console to highlight different data and values.
     internal class ConveyorBeltSimulator
     {
         Random rand = new Random();
@@ -111,20 +150,32 @@ namespace VibrationDevice
             slow,
             fast
         }
-        private int packageCount = 0;                                        // Count of packages leaving the conveyor belt.
-        private SpeedEnum beltSpeed = SpeedEnum.stopped;                     // Initial state of the conveyor belt.
-        private readonly double slowPackagesPerSecond = 1;                   // Packages completed at slow speed/ per second
-        private readonly double fastPackagesPerSecond = 2;                   // Packages completed at fast speed/ per second
-        private double beltStoppedSeconds = 0;                               // Time the belt has been stopped.
-        private double temperature = 60;                                     // Ambient temperature of the facility.
-        private double seconds = 0;                                          // Time conveyor belt is running.
+        // Count of packages leaving the conveyor belt.
+        private int packageCount = 0;
+        // Initial state of the conveyor belt.
+        private SpeedEnum beltSpeed = SpeedEnum.stopped;
+        // Packages completed at slow speed/ per second
+        private readonly double slowPackagesPerSecond = 1;
+        // Packages completed at fast speed/ per second
+        private readonly double fastPackagesPerSecond = 2;
+        // Time the belt has been stopped.
+        private double beltStoppedSeconds = 0;
+        // Ambient temperature of the facility.
+        private double temperature = 60;
+        // Time conveyor belt is running.
+        private double seconds = 0;
 
         // Vibration globals.
-        private double forcedSeconds = 0;                                    // Time since forced vibration started.
-        private double increasingSeconds = 0;                                // Time since increasing vibration started.
-        private double naturalConstant;                                      // Constant identifying the severity of natural vibration.
-        private double forcedConstant = 0;                                   // Constant identifying the severity of forced vibration.
-        private double increasingConstant = 0;                               // Constant identifying the severity of increasing vibration.
+        // Time since forced vibration started.
+        private double forcedSeconds = 0;
+        // Time since increasing vibration started.
+        private double increasingSeconds = 0;
+        // Constant identifying the severity of natural vibration.
+        private double naturalConstant;
+        // Constant identifying the severity of forced vibration.
+        private double forcedConstant = 0;
+        // Constant identifying the severity of increasing vibration.
+        private double increasingConstant = 0;
 
         public double BeltStoppedSeconds { get => beltStoppedSeconds; }
         public int PackageCount { get => packageCount; }
@@ -136,7 +187,8 @@ namespace VibrationDevice
 
             // Create a number between 2 and 4, as a constant for normal vibration levels.
             naturalConstant = 2 + 2 * rand.NextDouble();
-            intervalInSeconds = intervalInMilliseconds / 1000;  // Time interval in seconds.
+            // Time interval in seconds.
+            intervalInSeconds = intervalInMilliseconds / 1000;
         }
 
         internal double ReadVibration()
@@ -200,9 +252,14 @@ namespace VibrationDevice
                     if (rand.NextDouble() < 0.1)
                     {
                         // Forced vibration starts.
-                        forcedConstant = 1 + 6 * rand.NextDouble();             // A number between 1 and 7.
+                        // A number between 1 and 7.
+                        forcedConstant = 1 + 6 * rand.NextDouble();
                         if (beltSpeed == SpeedEnum.slow)
-                            forcedConstant /= 2;                                // Lesser vibration if slower speeds.
+                        {
+                            // Lesser vibration if slower speeds.
+                            forcedConstant /= 2;
+                        }
+                        // Lesser vibration if slower speeds.
                         forcedSeconds = 0;
                         ConsoleHelper.WriteRedMessage($"Forced vibration starting with severity: {Math.Round(forcedConstant, 2)}");
                     }
@@ -226,9 +283,13 @@ namespace VibrationDevice
                     if (rand.NextDouble() < 0.05)
                     {
                         // Increasing vibration starts.
-                        increasingConstant = 100 + 100 * rand.NextDouble();     // A number between 100 and 200.
+                        // A number between 100 and 200.
+                        increasingConstant = 100 + 100 * rand.NextDouble();
                         if (beltSpeed == SpeedEnum.slow)
-                            increasingConstant *= 2;                            // Longer period if slower speeds.
+                        {
+                            // Longer period if slower speeds.
+                            increasingConstant *= 2;
+                        }
                         increasingSeconds = 0;
                         ConsoleHelper.WriteRedMessage($"Increasing vibration starting with severity: {Math.Round(increasingConstant, 2)}");
                     }

@@ -1,0 +1,751 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.451.19169",
+      "templateHash": "4473547612763490289"
+    }
+  },
+  "parameters": {
+    "yourID": {
+      "type": "string",
+      "metadata": {
+        "description": "Your unique ID - i.e. dm041221"
+      }
+    },
+    "courseID": {
+      "type": "string",
+      "metadata": {
+        "description": "Course ID - i.e. az220"
+      }
+    },
+    "vmResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Resource Group for VM"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "User name for the Virtual Machine."
+      }
+    },
+    "authenticationType": {
+      "type": "string",
+      "defaultValue": "password",
+      "metadata": {
+        "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended for production."
+      },
+      "allowedValues": [
+        "sshPublicKey",
+        "password"
+      ]
+    },
+    "adminPasswordOrKey": {
+      "type": "secureString",
+      "metadata": {
+        "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+      }
+    }
+  },
+  "functions": [],
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "iotHubName": "[format('iot-{0}-training-{1}', parameters('courseID'), parameters('yourID'))]",
+    "identityName": "[format('{0}ID', parameters('courseID'))]",
+    "contributorRoleDefinitionId": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c', subscription().subscriptionId)]",
+    "gatewayDeviceID": "[format('vm-az220-training-gw0002-{0}', parameters('yourID'))]",
+    "deviceID": "sensor-th-0084",
+    "scriptIdentity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]": {}
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "apiVersion": "2018-11-30",
+      "name": "[variables('identityName')]",
+      "location": "[variables('location')]"
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2018-09-01-preview",
+      "name": "[guid(subscription().subscriptionId, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')))]",
+      "properties": {
+        "roleDefinitionId": "[variables('contributorRoleDefinitionId')]",
+        "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2018-11-30', 'Full').properties.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "vmRG",
+      "subscriptionId": "[subscription().subscriptionId]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "resourceGroupName": {
+            "value": "[parameters('vmResourceGroup')]"
+          },
+          "resourceGroupLocation": {
+            "value": "[variables('location')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.451.19169",
+              "templateHash": "14609078844642123228"
+            }
+          },
+          "parameters": {
+            "resourceGroupName": {
+              "type": "string"
+            },
+            "resourceGroupLocation": {
+              "type": "string"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Resources/resourceGroups",
+              "apiVersion": "2021-01-01",
+              "name": "[parameters('resourceGroupName')]",
+              "location": "[parameters('resourceGroupLocation')]"
+            }
+          ],
+          "outputs": {
+            "resourceGroupName": {
+              "type": "string",
+              "value": "[parameters('resourceGroupName')]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "deployHub",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "iotHubName": {
+            "value": "[variables('iotHubName')]"
+          },
+          "location": {
+            "value": "[variables('location')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.451.19169",
+              "templateHash": "7255214456599870961"
+            }
+          },
+          "parameters": {
+            "iotHubName": {
+              "type": "string",
+              "metadata": {
+                "description": "The IoT Hub name"
+              }
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Specify the location of the resources."
+              }
+            },
+            "skuName": {
+              "type": "string",
+              "defaultValue": "S1",
+              "metadata": {
+                "description": "The SKU to use for the IoT Hub."
+              }
+            },
+            "skuUnits": {
+              "type": "int",
+              "defaultValue": 1,
+              "metadata": {
+                "description": "The number of IoT Hub units."
+              }
+            }
+          },
+          "functions": [],
+          "variables": {
+            "iotHubKeyName": "iothubowner"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Devices/IotHubs",
+              "apiVersion": "2020-08-31",
+              "name": "[parameters('iotHubName')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "[parameters('skuName')]",
+                "capacity": "[parameters('skuUnits')]"
+              }
+            }
+          ],
+          "outputs": {
+            "connectionString": {
+              "type": "string",
+              "value": "[format('HostName={0};SharedAccessKeyName={1};SharedAccessKey={2}', reference(resourceId('Microsoft.Devices/IotHubs', parameters('iotHubName'))).hostName, variables('iotHubKeyName'), listkeys(resourceId('Microsoft.Devices/Iothubs/Iothubkeys', parameters('iotHubName'), variables('iotHubKeyName')), '2020-03-01').primaryKey)]"
+            },
+            "eventHubEndPoint": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Devices/IotHubs', parameters('iotHubName'))).eventHubEndpoints.events.endpoint]"
+            },
+            "eventHubPath": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Devices/IotHubs', parameters('iotHubName'))).eventHubEndpoints.events.path]"
+            },
+            "iothubownerKey": {
+              "type": "string",
+              "value": "[listkeys(resourceId('Microsoft.Devices/Iothubs/Iothubkeys', parameters('iotHubName'), 'iothubowner'), '2020-03-01').primarykey]"
+            },
+            "serviceKey": {
+              "type": "string",
+              "value": "[listkeys(resourceId('Microsoft.Devices/Iothubs/Iothubkeys', parameters('iotHubName'), 'service'), '2020-03-01').primarykey]"
+            },
+            "deviceKey": {
+              "type": "string",
+              "value": "[listkeys(resourceId('Microsoft.Devices/Iothubs/Iothubkeys', parameters('iotHubName'), 'device'), '2020-03-01').primarykey]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "createDevice",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "iotHubName": {
+            "value": "[variables('iotHubName')]"
+          },
+          "deviceID": {
+            "value": "[variables('deviceID')]"
+          },
+          "parentDeviceID": {
+            "value": "[variables('gatewayDeviceID')]"
+          },
+          "scriptIdentity": {
+            "value": "[variables('scriptIdentity')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.451.19169",
+              "templateHash": "5439677889766888236"
+            }
+          },
+          "parameters": {
+            "iotHubName": {
+              "type": "string",
+              "metadata": {
+                "description": "The IoT Hub name"
+              }
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Specify the location of the resources."
+              }
+            },
+            "groupName": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().name]",
+              "metadata": {
+                "description": "Specify the Group Name."
+              }
+            },
+            "scriptIdentity": {
+              "type": "object",
+              "metadata": {
+                "description": "The SKU to use for the IoT Hub."
+              }
+            },
+            "deviceID": {
+              "type": "string",
+              "metadata": {
+                "description": "The Device ID"
+              }
+            },
+            "utcValue": {
+              "type": "string",
+              "defaultValue": "[utcNow()]",
+              "metadata": {
+                "description": "Used to uniquely identify the script instance"
+              }
+            },
+            "parentDeviceID": {
+              "type": "string",
+              "metadata": {
+                "description": "The optional parent device id"
+              }
+            }
+          },
+          "functions": [],
+          "variables": {
+            "scriptName": "[format('createDevice{0}', parameters('utcValue'))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Resources/deploymentScripts",
+              "apiVersion": "2020-10-01",
+              "name": "[variables('scriptName')]",
+              "kind": "AzurePowerShell",
+              "location": "[parameters('location')]",
+              "identity": "[parameters('scriptIdentity')]",
+              "properties": {
+                "azPowerShellVersion": "6.0",
+                "retentionInterval": "PT1H",
+                "cleanupPreference": "Always",
+                "forceUpdateTag": "[parameters('utcValue')]",
+                "timeout": "PT10M",
+                "arguments": "[format('{0} {1} {2} {3}', parameters('groupName'), parameters('iotHubName'), parameters('deviceID'), parameters('parentDeviceID'))]",
+                "scriptContent": "param(\r\n    [Parameter(Mandatory = $true)]\r\n    [string]\r\n    $resourceGroup,\r\n\r\n    [Parameter(Mandatory = $true)]\r\n    [string]\r\n    $iotHub,\r\n\r\n    [Parameter(Mandatory = $true)]\r\n    [string]\r\n    $deviceName,\r\n\r\n    [Parameter(Mandatory = $true)]\r\n    [string]\r\n    $gatewayDeviceName\r\n)\r\n\r\n$output = \"Adding $($deviceName) to $($iotHub)\"\r\nWrite-Output $output\r\n\r\n$gatewayDetails = (Get-AzIotHubDeviceConnectionString -ResourceGroupName $resourceGroup -IotHubName $iotHub -DeviceId $gatewayDeviceName)\r\n\r\nif ($null -eq $gatewayDetails)\r\n{\r\n    Add-AzIotHubDevice -ResourceGroupName $resourceGroup -IotHubName $iotHub -DeviceId $gatewayDeviceName -AuthMethod \"shared_private_key\" -EdgeEnabled\r\n    $gatewayDetails = (Get-AzIotHubDeviceConnectionString -ResourceGroupName $resourceGroup -IotHubName $iotHub -DeviceId $gatewayDeviceName)\r\n}\r\nelse\r\n{\r\n    Write-Output 'Gateway Device exists'\r\n}\r\n\r\n$deviceDetails = (Get-AzIotHubDeviceConnectionString -ResourceGroupName $resourceGroup -IotHubName $iotHub -DeviceId $deviceName)\r\n\r\nif ($null -eq $deviceDetails)\r\n{\r\n    Add-AzIotHubDevice -ResourceGroupName $resourceGroup -IotHubName $iotHub -DeviceId $deviceName -AuthMethod \"shared_private_key\" -ParentDeviceId $gatewayDeviceName\r\n    $deviceDetails = (Get-AzIotHubDeviceConnectionString -ResourceGroupName $resourceGroup -IotHubName $iotHub -DeviceId $deviceName)\r\n}\r\nelse\r\n{\r\n    Write-Output 'Device exists'\r\n}\r\n\r\n$DeploymentScriptOutputs = @{}\r\n$DeploymentScriptOutputs['text'] = $output\r\n$DeploymentScriptOutputs['date'] = (get-date -Format FileDate).toString()\r\n$DeploymentScriptOutputs['deviceId'] = $deviceDetails.DeviceId\r\n$DeploymentScriptOutputs['gatewayId'] = $gatewayDetails.DeviceId\r\n$DeploymentScriptOutputs['deviceConnectionString'] = $deviceDetails.ConnectionString\r\n$DeploymentScriptOutputs['gatewayConnectionString'] = $gatewayDetails.ConnectionString\r\n# primary key\r\n$DeploymentScriptOutputs['primaryKey'] = ($deviceDetails.ConnectionString -replace ';', \"`r`n\" | ConvertFrom-StringData).SharedAccessKey\r\n\r\n# secondary key\r\n$deviceDetails = (Get-AzIotHubDeviceConnectionString -ResourceGroupName $resourceGroup -IotHubName $iotHub -KeyType secondary -DeviceId $deviceName)\r\n$DeploymentScriptOutputs['secondaryKey'] = ($deviceDetails.ConnectionString -replace ';', \"`r`n\" | ConvertFrom-StringData).SharedAccessKey\r\n"
+              }
+            }
+          ],
+          "outputs": {
+            "deviceConnectionString": {
+              "type": "string",
+              "value": "[reference(variables('scriptName')).outputs.deviceConnectionString]"
+            },
+            "gatewayConnectionString": {
+              "type": "string",
+              "value": "[reference(variables('scriptName')).outputs.gatewayConnectionString]"
+            },
+            "primaryKey": {
+              "type": "string",
+              "value": "[reference(variables('scriptName')).outputs.primaryKey]"
+            },
+            "secondaryKey": {
+              "type": "string",
+              "value": "[reference(variables('scriptName')).outputs.secondaryKey]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'deployHub')]",
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]",
+        "[resourceId('Microsoft.Authorization/roleAssignments', guid(subscription().subscriptionId, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "createLab14VM",
+      "resourceGroup": "[parameters('vmResourceGroup')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "virtualMachineName": {
+            "value": "[variables('gatewayDeviceID')]"
+          },
+          "deviceConnectionString": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'createDevice'), '2019-10-01').outputs.gatewayConnectionString.value]"
+          },
+          "authenticationType": {
+            "value": "[parameters('authenticationType')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPasswordOrKey": {
+            "value": "[parameters('adminPasswordOrKey')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.451.19169",
+              "templateHash": "17936656205366465278"
+            }
+          },
+          "parameters": {
+            "virtualMachineName": {
+              "type": "string",
+              "metadata": {
+                "description": "The unique name for the VM."
+              }
+            },
+            "deviceConnectionString": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "IoT Edge Device Connection String"
+              }
+            },
+            "virtualMachineSize": {
+              "type": "string",
+              "defaultValue": "Standard_DS1_v2",
+              "metadata": {
+                "description": "VM size"
+              }
+            },
+            "ubuntuOSVersion": {
+              "type": "string",
+              "defaultValue": "18.04-LTS",
+              "metadata": {
+                "description": "The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version."
+              }
+            },
+            "adminUsername": {
+              "type": "string",
+              "metadata": {
+                "description": "User name for the Virtual Machine."
+              }
+            },
+            "authenticationType": {
+              "type": "string",
+              "defaultValue": "password",
+              "metadata": {
+                "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended for production."
+              },
+              "allowedValues": [
+                "sshPublicKey",
+                "password"
+              ]
+            },
+            "adminPasswordOrKey": {
+              "type": "secureString",
+              "metadata": {
+                "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+              }
+            },
+            "allowSSH": {
+              "type": "bool",
+              "defaultValue": true,
+              "metadata": {
+                "description": "Allow SSH traffic through the firewall"
+              }
+            }
+          },
+          "functions": [],
+          "variables": {
+            "imagePublisher": "Canonical",
+            "imageOffer": "UbuntuServer",
+            "nicName_var": "[format('nic-{0}', parameters('virtualMachineName'))]",
+            "vmName_var": "[parameters('virtualMachineName')]",
+            "virtualNetworkName_var": "[format('vnet-{0}', parameters('virtualMachineName'))]",
+            "publicIPAddressName_var": "[format('ip-{0}', parameters('virtualMachineName'))]",
+            "addressPrefix": "10.0.0.0/16",
+            "subnet1Name": "[format('subnet-{0}', parameters('virtualMachineName'))]",
+            "subnet1Prefix": "10.0.0.0/24",
+            "publicIPAddressType": "Dynamic",
+            "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName_var'))]",
+            "subnet1Ref": "[format('{0}/subnets/{1}', variables('vnetID'), variables('subnet1Name'))]",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "[format('/home/{0}/.ssh/authorized_keys', parameters('adminUsername'))]",
+                    "keyData": "[parameters('adminPasswordOrKey')]"
+                  }
+                ]
+              }
+            },
+            "dcs": "[parameters('deviceConnectionString')]",
+            "networkSecurityGroupName_var": "[format('nsg-{0}', parameters('virtualMachineName'))]",
+            "sshAndIoTRules": [
+              {
+                "name": "default-allow-22",
+                "properties": {
+                  "priority": 1000,
+                  "access": "Allow",
+                  "direction": "Inbound",
+                  "destinationPortRange": "22",
+                  "protocol": "Tcp",
+                  "sourceAddressPrefix": "*",
+                  "sourcePortRange": "*",
+                  "destinationAddressPrefix": "*"
+                }
+              },
+              {
+                "name": "MQTT",
+                "properties": {
+                  "priority": 1010,
+                  "access": "Allow",
+                  "direction": "Inbound",
+                  "destinationPortRange": "8883",
+                  "protocol": "Tcp",
+                  "sourceAddressPrefix": "*",
+                  "sourcePortRange": "*",
+                  "destinationAddressPrefix": "*"
+                }
+              },
+              {
+                "name": "AMQP",
+                "properties": {
+                  "priority": 1020,
+                  "access": "Allow",
+                  "direction": "Inbound",
+                  "destinationPortRange": "5671",
+                  "protocol": "Tcp",
+                  "sourceAddressPrefix": "*",
+                  "sourcePortRange": "*",
+                  "destinationAddressPrefix": "*"
+                }
+              },
+              {
+                "name": "HTTPS",
+                "properties": {
+                  "priority": 1030,
+                  "access": "Allow",
+                  "direction": "Inbound",
+                  "destinationPortRange": "443",
+                  "protocol": "Tcp",
+                  "sourceAddressPrefix": "*",
+                  "sourcePortRange": "*",
+                  "destinationAddressPrefix": "*"
+                }
+              }
+            ],
+            "justIoTProtocolsRules": [
+              {
+                "name": "MQTT",
+                "properties": {
+                  "priority": 1010,
+                  "access": "Allow",
+                  "direction": "Inbound",
+                  "destinationPortRange": "8883",
+                  "protocol": "Tcp",
+                  "sourceAddressPrefix": "*",
+                  "sourcePortRange": "*",
+                  "destinationAddressPrefix": "*"
+                }
+              },
+              {
+                "name": "AMQP",
+                "properties": {
+                  "priority": 1020,
+                  "access": "Allow",
+                  "direction": "Inbound",
+                  "destinationPortRange": "5671",
+                  "protocol": "Tcp",
+                  "sourceAddressPrefix": "*",
+                  "sourcePortRange": "*",
+                  "destinationAddressPrefix": "*"
+                }
+              },
+              {
+                "name": "HTTPS",
+                "properties": {
+                  "priority": 1030,
+                  "access": "Allow",
+                  "direction": "Inbound",
+                  "destinationPortRange": "443",
+                  "protocol": "Tcp",
+                  "sourceAddressPrefix": "*",
+                  "sourcePortRange": "*",
+                  "destinationAddressPrefix": "*"
+                }
+              }
+            ]
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2015-06-15",
+              "name": "[variables('publicIPAddressName_var')]",
+              "location": "[resourceGroup().location]",
+              "properties": {
+                "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+                "dnsSettings": {
+                  "domainNameLabel": "[parameters('virtualMachineName')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Network/networkSecurityGroups",
+              "apiVersion": "2019-08-01",
+              "name": "[variables('networkSecurityGroupName_var')]",
+              "location": "[resourceGroup().location]",
+              "properties": {
+                "securityRules": "[if(parameters('allowSSH'), variables('sshAndIoTRules'), variables('justIoTProtocolsRules'))]"
+              }
+            },
+            {
+              "type": "Microsoft.Network/virtualNetworks",
+              "apiVersion": "2015-06-15",
+              "name": "[variables('virtualNetworkName_var')]",
+              "location": "[resourceGroup().location]",
+              "properties": {
+                "addressSpace": {
+                  "addressPrefixes": [
+                    "[variables('addressPrefix')]"
+                  ]
+                },
+                "subnets": [
+                  {
+                    "name": "[variables('subnet1Name')]",
+                    "properties": {
+                      "addressPrefix": "[variables('subnet1Prefix')]",
+                      "networkSecurityGroup": {
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName_var'))]"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName_var'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "apiVersion": "2015-06-15",
+              "name": "[variables('nicName_var')]",
+              "location": "[resourceGroup().location]",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfig1",
+                    "properties": {
+                      "privateIPAllocationMethod": "Dynamic",
+                      "publicIPAddress": {
+                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName_var'))]"
+                      },
+                      "subnet": {
+                        "id": "[variables('subnet1Ref')]"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName_var'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName_var'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2016-04-30-preview",
+              "name": "[variables('vmName_var')]",
+              "location": "[resourceGroup().location]",
+              "properties": {
+                "hardwareProfile": {
+                  "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "osProfile": {
+                  "computerName": "[variables('vmName_var')]",
+                  "adminUsername": "[parameters('adminUsername')]",
+                  "adminPassword": "[parameters('adminPasswordOrKey')]",
+                  "customData": "[base64(format('#cloud-config\n\napt:\n  preserve_sources_list: true\n  sources:\n    msft.list:\n      source: \"deb https://packages.microsoft.com/ubuntu/18.04/multiarch/prod bionic main\"\n      key: |\n        -----BEGIN PGP PUBLIC KEY BLOCK-----\n        Version: GnuPG v1.4.7 (GNU/Linux)\n\n        mQENBFYxWIwBCADAKoZhZlJxGNGWzqV+1OG1xiQeoowKhssGAKvd+buXCGISZJwT\n        LXZqIcIiLP7pqdcZWtE9bSc7yBY2MalDp9Liu0KekywQ6VVX1T72NPf5Ev6x6DLV\n        7aVWsCzUAF+eb7DC9fPuFLEdxmOEYoPjzrQ7cCnSV4JQxAqhU4T6OjbvRazGl3ag\n        OeizPXmRljMtUUttHQZnRhtlzkmwIrUivbfFPD+fEoHJ1+uIdfOzZX8/oKHKLe2j\n        H632kvsNzJFlROVvGLYAk2WRcLu+RjjggixhwiB+Mu/A8Tf4V6b+YppS44q8EvVr\n        M+QvY7LNSOffSO6Slsy9oisGTdfE39nC7pVRABEBAAG0N01pY3Jvc29mdCAoUmVs\n        ZWFzZSBzaWduaW5nKSA8Z3Bnc2VjdXJpdHlAbWljcm9zb2Z0LmNvbT6JATUEEwEC\n        AB8FAlYxWIwCGwMGCwkIBwMCBBUCCAMDFgIBAh4BAheAAAoJEOs+lK2+EinPGpsH\n        /32vKy29Hg51H9dfFJMx0/a/F+5vKeCeVqimvyTM04C+XENNuSbYZ3eRPHGHFLqe\n        MNGxsfb7C7ZxEeW7J/vSzRgHxm7ZvESisUYRFq2sgkJ+HFERNrqfci45bdhmrUsy\n        7SWw9ybxdFOkuQoyKD3tBmiGfONQMlBaOMWdAsic965rvJsd5zYaZZFI1UwTkFXV\n        KJt3bp3Ngn1vEYXwijGTa+FXz6GLHueJwF0I7ug34DgUkAFvAs8Hacr2DRYxL5RJ\n        XdNgj4Jd2/g6T9InmWT0hASljur+dJnzNiNCkbn9KbX7J/qK1IbR8y560yRmFsU+\n        NdCFTW7wY0Fb1fWJ+/KTsC4=\n        =J6gs\n        -----END PGP PUBLIC KEY BLOCK-----\npackages:\n  - moby-cli\n  - moby-engine\nruncmd:\n  - dcs=\"{0}\"\n  - |\n      set -x\n      (\n        echo \"Device connection string: $dcs\"\n\n        # Wait for docker daemon to start\n        while [ $(ps -ef | grep -v grep | grep docker | wc -l) -le 0 ]; do\n          sleep 3\n        done\n\n        apt install aziot-identity-service\n        apt install aziot-edge\n\n        if [ ! -z $dcs ]; then\n          mkdir /etc/aziot\n          wget https://raw.githubusercontent.com/Azure/iotedge-vm-deploy/1.2.0/config.toml -O /etc/aziot/config.toml\n          sed -i \"s#\\(connection_string = \\).*#\\1\\\"$dcs\\\"#g\" /etc/aziot/config.toml\n\n          echo \"Setup certificates\"\n          mkdir /etc/gw-ssl\n          git clone https://github.com/Azure/iotedge.git /etc/gw-ssl/iotedge\n\n          mkdir /tmp/lab12\n          cp /etc/gw-ssl/iotedge/tools/CACertificates/*.cnf /tmp/lab12\n          cp /etc/gw-ssl/iotedge/tools/CACertificates/certGen.sh /tmp/lab12\n\n          echo \"Generate certs\"\n          chmod +x /tmp/lab12/certGen.sh\n          /tmp/lab12/certGen.sh create_root_and_intermediate\n          /tmp/lab12/certGen.sh create_edge_device_ca_certificate \"MyEdgeDeviceCA\"\n\n          echo \"wait for certs\"\n\n          echo \"Copy certs to Iot Edge folder\"\n          cp /tmp/lab12/certs/azure-iot-test-only.root.ca.cert.pem /etc/aziot\n          cp /tmp/lab12/certs/iot-edge-device-ca-MyEdgeDeviceCA-full-chain.cert.pem /etc/aziot\n          cp /tmp/lab12/private/iot-edge-device-ca-MyEdgeDeviceCA.key.pem /etc/aziot\n\n          chmod 666 /etc/aziot/azure-iot-test-only.root.ca.cert.pem\n          chmod 666 /etc/aziot/iot-edge-device-ca-MyEdgeDeviceCA-full-chain.cert.pem\n          chmod 666 /etc/aziot/iot-edge-device-ca-MyEdgeDeviceCA.key.pem\n\n          echo \"Update config file\"\n\n          echo \"\" >> /etc/aziot/config.toml\n          echo \"trust_bundle_cert = ''file:///etc/aziot/azure-iot-test-only.root.ca.cert.pem''\" >> /etc/aziot/config.toml\n          echo \"\" >> /etc/aziot/config.toml\n          echo \"[edge_ca]\" >> /etc/aziot/config.toml\n          echo \"cert = ''file:///etc/aziot/iot-edge-device-ca-MyEdgeDeviceCA-full-chain.cert.pem''\" >> /etc/aziot/config.toml\n          echo \"pk = ''file:///etc/aziot/iot-edge-device-ca-MyEdgeDeviceCA.key.pem''\" >> /etc/aziot/config.toml\n\n          chmod 755 /tmp/lab12\n          chmod 755 /tmp/lab12/certs\n          chmod 755 /tmp/lab12/private\n          chmod 666 /tmp/lab12/certs/*\n          chmod 666 /tmp/lab12/private/*\n\n          iotedge config apply -c /etc/aziot/config.toml\n        fi\n\n        apt install -y deviceupdate-agent\n        apt install -y deliveryoptimization-plugin-apt\n        systemctl restart adu-agent\n\n      ) &\n\n', variables('dcs')))]",
+                  "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "[variables('imagePublisher')]",
+                    "offer": "[variables('imageOffer')]",
+                    "sku": "[parameters('ubuntuOSVersion')]",
+                    "version": "latest"
+                  },
+                  "osDisk": {
+                    "createOption": "FromImage"
+                  }
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName_var'))]"
+                    }
+                  ]
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName_var'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "PublicFQDN": {
+              "type": "string",
+              "value": "[format('FQDN: {0}', reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName_var'))).dnsSettings.fqdn)]"
+            },
+            "PublicSSH": {
+              "type": "string",
+              "value": "[format('SSH : ssh {0}@{1}', reference(resourceId('Microsoft.Compute/virtualMachines', variables('vmName_var'))).osProfile.adminUsername, reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName_var'))).dnsSettings.fqdn)]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'createDevice')]"
+      ]
+    }
+  ],
+  "outputs": {
+    "connectionString": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deployHub'), '2019-10-01').outputs.connectionString.value]"
+    },
+    "deviceConnectionString": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'createDevice'), '2019-10-01').outputs.deviceConnectionString.value]"
+    },
+    "gatewayConnectionString": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'createDevice'), '2019-10-01').outputs.gatewayConnectionString.value]"
+    },
+    "devicePrimaryKey": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'createDevice'), '2019-10-01').outputs.primaryKey.value]"
+    },
+    "publicFQDN": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('vmResourceGroup')), 'Microsoft.Resources/deployments', 'createLab14VM'), '2019-10-01').outputs.PublicFQDN.value]"
+    },
+    "publicSSH": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('vmResourceGroup')), 'Microsoft.Resources/deployments', 'createLab14VM'), '2019-10-01').outputs.PublicSSH.value]"
+    }
+  }
+}

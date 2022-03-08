@@ -1,0 +1,135 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.451.19169",
+      "templateHash": "16261203991197426254"
+    }
+  },
+  "parameters": {
+    "yourID": {
+      "type": "string",
+      "metadata": {
+        "description": "Your unique ID - i.e. dm041221"
+      }
+    },
+    "courseID": {
+      "type": "string",
+      "metadata": {
+        "description": "Course ID - i.e. az220"
+      }
+    }
+  },
+  "functions": [],
+  "variables": {
+    "iotHubName": "[format('iot-{0}-training-{1}', parameters('courseID'), parameters('yourID'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "deployHub",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "iotHubName": {
+            "value": "[variables('iotHubName')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.451.19169",
+              "templateHash": "7255214456599870961"
+            }
+          },
+          "parameters": {
+            "iotHubName": {
+              "type": "string",
+              "metadata": {
+                "description": "The IoT Hub name"
+              }
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Specify the location of the resources."
+              }
+            },
+            "skuName": {
+              "type": "string",
+              "defaultValue": "S1",
+              "metadata": {
+                "description": "The SKU to use for the IoT Hub."
+              }
+            },
+            "skuUnits": {
+              "type": "int",
+              "defaultValue": 1,
+              "metadata": {
+                "description": "The number of IoT Hub units."
+              }
+            }
+          },
+          "functions": [],
+          "variables": {
+            "iotHubKeyName": "iothubowner"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Devices/IotHubs",
+              "apiVersion": "2020-08-31",
+              "name": "[parameters('iotHubName')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "[parameters('skuName')]",
+                "capacity": "[parameters('skuUnits')]"
+              }
+            }
+          ],
+          "outputs": {
+            "connectionString": {
+              "type": "string",
+              "value": "[format('HostName={0};SharedAccessKeyName={1};SharedAccessKey={2}', reference(resourceId('Microsoft.Devices/IotHubs', parameters('iotHubName'))).hostName, variables('iotHubKeyName'), listkeys(resourceId('Microsoft.Devices/Iothubs/Iothubkeys', parameters('iotHubName'), variables('iotHubKeyName')), '2020-03-01').primaryKey)]"
+            },
+            "eventHubEndPoint": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Devices/IotHubs', parameters('iotHubName'))).eventHubEndpoints.events.endpoint]"
+            },
+            "eventHubPath": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Devices/IotHubs', parameters('iotHubName'))).eventHubEndpoints.events.path]"
+            },
+            "iothubownerKey": {
+              "type": "string",
+              "value": "[listkeys(resourceId('Microsoft.Devices/Iothubs/Iothubkeys', parameters('iotHubName'), 'iothubowner'), '2020-03-01').primarykey]"
+            },
+            "serviceKey": {
+              "type": "string",
+              "value": "[listkeys(resourceId('Microsoft.Devices/Iothubs/Iothubkeys', parameters('iotHubName'), 'service'), '2020-03-01').primarykey]"
+            },
+            "deviceKey": {
+              "type": "string",
+              "value": "[listkeys(resourceId('Microsoft.Devices/Iothubs/Iothubkeys', parameters('iotHubName'), 'device'), '2020-03-01').primarykey]"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "connectionString": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'deployHub'), '2019-10-01').outputs.connectionString.value]"
+    }
+  }
+}

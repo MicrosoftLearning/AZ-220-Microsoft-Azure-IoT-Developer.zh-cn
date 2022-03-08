@@ -5,36 +5,78 @@ using Microsoft.Azure.Devices.Shared;
 using Microsoft.Azure.Devices.Client;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
-namespace fwupdatedevice
+namespace FWUpdateDevice
 {
     class SimulatedDevice
     {
-        // The device connection string to authenticate the device with your IoT hub.
-        static string s_deviceConnectionString = "";
+        // Global Variables
+        // The device connection string to authenticate the device with your IoT
+        // hub - supplied via the command-line
+        static string deviceConnectionString = "<your device connection string>";
 
-        // Device ID variable
-        static string DeviceID="unknown";
+        // Device ID variable - will be assigned from the supplied connection
+        // string
+        static string deviceID="sensor-th-0155";
 
         // Firmware version variable
-        static string DeviceFWVersion = "1.0.0";
+        static string deviceFWVersion = "1.0.0";
 
-        // Simple console log function
-        static void LogToConsole(string text)
+        static async Task Main(string[] args)
         {
-            // we prefix the logs with the device ID
-            Console.WriteLine(DeviceID + ": " + text);
+            // Connect to the IoT Hub as usual
+            DeviceClient deviceClient =
+                DeviceClient.CreateFromConnectionString(
+                    deviceConnectionString,
+                    TransportType.Mqtt);
+
+            if (deviceClient == null)
+            {
+                ConsoleHelper.WriteRedMessage("Failed to create DeviceClient!");
+                return;
+            }
+
+            // Run device init routine
+            await InitDevice(deviceClient);
+
+            // Attach callback for Desired Properties changes
+            await deviceClient
+                .SetDesiredPropertyUpdateCallbackAsync(
+                    OnDesiredPropertyChanged,
+                    deviceClient)
+                .ConfigureAwait(false);
+
+            // Wait for keystroke to end app
+            while (true)
+            {
+                Console.ReadLine();
+                return;
+            }
+        }
+
+        // Simulates the device startup
+        static async Task InitDevice(DeviceClient client)
+        {
+            ConsoleHelper.WriteGreenMessage($"{deviceID}: Device booted");
+            ConsoleHelper.WriteGreenMessage(
+                $"{deviceID}: Current firmware version: " + GetFirmwareVersion());
+            await UpdateFWUpdateStatus(client, GetFirmwareVersion(), "", "current", "", "", "");
         }
 
         // Function to retrieve firmware version from the OS/HW
         static string GetFirmwareVersion()
         {
-            // In here you would get the actual firmware version from the hardware. For the simulation purposes we will just send back the FWVersion variable value
-            return DeviceFWVersion;
+            // In here you would get the actual firmware version from the
+            // hardware. For the simulation purposes we will just send back the
+            // FWVersion variable value
+            return deviceFWVersion;
         }
 
-        // Function for updating a device twin reported property to report on the current Firmware (update) status
-        // Here are the values expected in the "firmware" update property by the firmware update configuration in IoT Hub
+        // Function for updating a device twin reported property to report on the
+        // current Firmware (update) status
+        // Here are the values expected in the "firmware" update property by the
+        // firmware update configuration in IoT Hub
         //  currentFwVersion: The firmware version currently running on the device.
         //  pendingFwVersion: The next version to update to, should match what's
         //                    specified in the desired properties. Blank if there
@@ -42,13 +84,13 @@ namespace fwupdatedevice
         //  fwUpdateStatus:   Defines the progress of the update so that it can be
         //                    categorized from a summary view. One of:
         //         - current:     There is no pending firmware update. currentFwVersion should
-        //                    match fwVersion from desired properties.
+        //                        match fwVersion from desired properties.
         //         - downloading: Firmware update image is downloading.
         //         - verifying:   Verifying image file checksum and any other validations.
         //         - applying:    Update to the new image file is in progress.
         //         - rebooting:   Device is rebooting as part of update process.
         //         - error:       An error occurred during the update process. Additional details
-        //                    should be specified in fwUpdateSubstatus.
+        //                        should be specified in fwUpdateSubstatus.
         //         - rolledback:  Update rolled back to the previous version due to an error.
         //  fwUpdateSubstatus: Any additional detail for the fwUpdateStatus . May include
         //                     reasons for error or rollback states, or download %.
@@ -63,8 +105,14 @@ namespace fwupdatedevice
         //         lastFwUpdateEndTime: ''
         //   }
         // }
-
-        static async Task UpdateFWUpdateStatus(DeviceClient client, string currentFwVersion, string pendingFwVersion, string fwUpdateStatus, string fwUpdateSubstatus, string lastFwUpdateStartTime, string lastFwUpdateEndTime)
+        static async Task UpdateFWUpdateStatus(
+            DeviceClient client,
+            string currentFwVersion,
+            string pendingFwVersion,
+            string fwUpdateStatus,
+            string fwUpdateSubstatus,
+            string lastFwUpdateStartTime,
+            string lastFwUpdateEndTime)
         {
             TwinCollection properties = new TwinCollection();
             if (currentFwVersion!=null)
@@ -83,17 +131,57 @@ namespace fwupdatedevice
             TwinCollection reportedProperties = new TwinCollection();
             reportedProperties["firmware"] = properties;
 
-            await client.UpdateReportedPropertiesAsync(reportedProperties).ConfigureAwait(false);
+            await client
+                .UpdateReportedPropertiesAsync(reportedProperties)
+                .ConfigureAwait(false);
+        }
+
+
+        // Callback for responding to desired property changes
+        static async Task OnDesiredPropertyChanged(TwinCollection desiredProperties, object userContext)
+        {
+            ConsoleHelper.WriteGreenMessage("Desired property changed:");
+            ConsoleHelper.WriteGreenMessage($"{desiredProperties.ToJson()}");
+
+            // Execute firmware update
+            if (desiredProperties.Contains("firmware") && (desiredProperties["firmware"] != null))
+            {
+                // In the desired properties, we will find the following information:
+                // fwVersion: the version number of the new firmware to flash
+                // fwPackageURI: URI from where to download the new firmware binary
+                // fwPackageCheckValue: Hash for validating the integrity of the
+                // binary downloaded
+                // We will assume the version of the firmware is a new one
+                TwinCollection fwProperties =
+                    new TwinCollection(desiredProperties["firmware"].ToString());
+                await UpdateFirmware(
+                    (DeviceClient)userContext,
+                    fwProperties["fwVersion"].ToString(),
+                    fwProperties["fwPackageURI"].ToString(),
+                    fwProperties["fwPackageCheckValue"].ToString());
+            }
         }
 
         // Execute firmware update on the device
-        static async Task UpdateFirmware(DeviceClient client, string fwVersion, string fwPackageURI, string fwPackageCheckValue)
+        static async Task UpdateFirmware(
+            DeviceClient client,
+            string fwVersion,
+            string fwPackageURI,
+            string fwPackageCheckValue)
         {
-            LogToConsole("A firmware update was requested from version " + GetFirmwareVersion() + " to version " + fwVersion);
-            await UpdateFWUpdateStatus(client, null, fwVersion, null, null, DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"), null);
+            ConsoleHelper.WriteGreenMessage(
+                "A firmware update was requested from version " +
+                GetFirmwareVersion() + " to version " + fwVersion);
 
-            // Get new firmware binary. Here you would download the binary or retrieve it from the source as instructed for your device, then double check with a hash the integrity of the binary you downloaded
-            LogToConsole("Downloading new firmware package from " + fwPackageURI);
+            await UpdateFWUpdateStatus(
+                client, null,
+                fwVersion, null, null,
+                DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"), null);
+
+            // Get new firmware binary. Here you would download the binary or
+            // retrieve it from the source as instructed for your device, then
+            // double check with a hash the integrity of the binary you downloaded
+            ConsoleHelper.WriteGreenMessage("Downloading new firmware package from " + fwPackageURI);
             await UpdateFWUpdateStatus(client, null, null, "downloading", "0", null, null);
             await Task.Delay(2 * 1000);
             await UpdateFWUpdateStatus(client, null, null, "downloading", "25", null, null);
@@ -104,100 +192,58 @@ namespace fwupdatedevice
             await Task.Delay(2 * 1000);
             await UpdateFWUpdateStatus(client, null, null, "downloading", "100", null, null);
             // report the binary has been downloaded
-            LogToConsole("The new firmware package has been successfully downloaded.");
+            ConsoleHelper.WriteGreenMessage(
+                "The new firmware package has been successfully downloaded.");
 
             // Check binary integrity
-            LogToConsole("Verifying firmware package with checksum " + fwPackageCheckValue);
+            ConsoleHelper.WriteGreenMessage(
+                "Verifying firmware package with checksum " + fwPackageCheckValue);
             await UpdateFWUpdateStatus(client, null, null, "verifying", null, null, null);
             await Task.Delay(5 * 1000);
             // report the binary has been downloaded
-            LogToConsole("The new firmware binary package has been successfully verified");
+            ConsoleHelper.WriteGreenMessage(
+                "The new firmware binary package has been successfully verified");
 
             // Apply new firmware
-            LogToConsole("Applying new firmware");
+            ConsoleHelper.WriteGreenMessage("Applying new firmware");
             await UpdateFWUpdateStatus(client, null, null, "applying", null, null, null);
             await Task.Delay(5 * 1000);
 
-            // On a real device you would reboot at the end of the process and the device at boot time would report the actual firmware version, which if successful should be the new version.
-            // For the sake of the simulation, we will simply wait some time and report the new firmware version
-            LogToConsole("Rebooting");
-            await UpdateFWUpdateStatus(client, null, null, "rebooting", null, null, DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+            // On a real device you would reboot at the end of the process and the
+            // device at boot time would report the actual firmware version, which
+            // if successful should be the new version. For the sake of the
+            // simulation, we will simply wait some time and report the new
+            // firmware version
+            ConsoleHelper.WriteGreenMessage("Rebooting");
+            await UpdateFWUpdateStatus(
+                client, null, null, "rebooting",
+                null, null, DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"));
             await Task.Delay(5 * 1000);
 
+
             // On a real device you would issue a command to reboot the device. Here we are simply running the init function
-            DeviceFWVersion = fwVersion;
+            deviceFWVersion = fwVersion;
             await InitDevice(client);
 
         }
+    }
 
-        // Callback for responding to desired property changes
-        static async Task OnDesiredPropertyChanged(TwinCollection desiredProperties, object userContext)
+    internal static class ConsoleHelper
+    {
+        internal static void WriteColorMessage(string text, ConsoleColor clr)
         {
-            LogToConsole("Desired property changed:");
-            LogToConsole($"{desiredProperties.ToJson()}");
-
-            // Execute firmware update
-            if (desiredProperties.Contains("firmware") && (desiredProperties["firmware"]!=null))
-            {
-                // In the desired properties, we will find the following information:
-                // fwVersion: the version number of the new firmware to flash
-                // fwPackageURI: URI from where to download the new firmware binary
-                // fwPackageCheckValue: Hash for validating the integrity of the binary downloaded
-                // We will assume the version of the firmware is a new one
-                TwinCollection fwProperties = new TwinCollection(desiredProperties["firmware"].ToString());
-                await UpdateFirmware((DeviceClient)userContext, fwProperties["fwVersion"].ToString(), fwProperties["fwPackageURI"].ToString(), fwProperties["fwPackageCheckValue"].ToString());
-
-            }
+            Console.ForegroundColor = clr;
+            Console.WriteLine(text);
+            Console.ResetColor();
+        }
+        internal static void WriteGreenMessage(string text)
+        {
+            WriteColorMessage(text, ConsoleColor.Green);
         }
 
-        static async Task InitDevice(DeviceClient client)
+        internal static void WriteRedMessage(string text)
         {
-            LogToConsole("Device booted");
-            LogToConsole("Current firmware version: " + GetFirmwareVersion());
-            await UpdateFWUpdateStatus(client, GetFirmwareVersion(), "", "current", "", "", "");
-        }
-
-        static async Task Main(string[] args)
-        {
-            // Get the device connection string from the command line
-            if (string.IsNullOrEmpty(s_deviceConnectionString) && args.Length > 0)
-            {
-                s_deviceConnectionString = args[0];
-            } else
-            {
-                Console.WriteLine("Please enter the connection string as argument.");
-                return;
-            }
-
-            DeviceClient deviceClient = DeviceClient.CreateFromConnectionString(s_deviceConnectionString, TransportType.Mqtt);
-
-            if (deviceClient == null)
-            {
-                Console.WriteLine("Failed to create DeviceClient!");
-                return;
-            }
-
-            // Get the device ID
-            string[] elements = s_deviceConnectionString.Split('=',';');
-
-            for(int i=0;i<elements.Length; i+=2)
-            {
-                if (elements[i]=="DeviceId") DeviceID = elements[i+1];
-            }
-
-            // Run device init routine
-            await InitDevice(deviceClient);
-
-            // Attach callback for Desired Properties changes
-            await deviceClient.SetDesiredPropertyUpdateCallbackAsync(OnDesiredPropertyChanged, deviceClient).ConfigureAwait(false);
-
-            // Wait for keystroke to end app
-            // TODO
-            while (true)
-            {
-                Console.ReadLine();
-                return;
-            }
+            WriteColorMessage(text, ConsoleColor.Red);
         }
     }
 }

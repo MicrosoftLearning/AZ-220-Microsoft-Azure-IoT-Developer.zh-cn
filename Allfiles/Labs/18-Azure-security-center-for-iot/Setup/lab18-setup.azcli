@@ -52,17 +52,6 @@ else
     reportStatus $? "$output"
 fi
 
-# create resource group
-printf "${YELLOW}Create resource group rg-az220vm - ${NC}"
-exists=$( az group exists --name rg-az220vm -o tsv )
-if [ "${exists}" == "true" ]
-then
-    printf "${GREEN}Already exists\n${NC}"
-else
-    output=$( az group create --name rg-az220vm --location $Location -o json >> build.log 2>&1)
-    reportStatus $? "$output"
-fi
-
 # create IoT Hub
 printf "${YELLOW}Create IoT Hub $IoTHubName - ${NC}"
 exists=$( az iot hub list --query "[?contains(name, '${IoTHubName}')].name" -o tsv )

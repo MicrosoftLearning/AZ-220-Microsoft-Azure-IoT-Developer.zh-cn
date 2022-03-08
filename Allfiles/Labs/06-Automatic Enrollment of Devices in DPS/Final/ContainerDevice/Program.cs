@@ -1,5 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// Licensed under the MIT license. See LICENSE file in the project root for full
+// license information.
+
+// New Features:
+//
+// * Leverages X509 Certificates to authenticate the devices
 
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Provisioning.Client;
@@ -11,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Security.Cryptography.X509Certificates;
+
 
 namespace ContainerDevice
 {
@@ -35,7 +41,11 @@ namespace ContainerDevice
 
         private static DeviceClient deviceClient;
 
-        // INSERT Main method below here
+        // This Main method is very similar to that used in the earlier lab.
+        // The two significant changes are the need to load the X.509 certificate
+        // and then the change to using SecurityProviderX509Certificate as the
+        // security provider. The remaining code is identical - you should note
+        // that the device twin property change code is also present.
         public static async Task Main(string[] args)
         {
             X509Certificate2 certificate = LoadProvisioningCertificate();
@@ -50,10 +60,11 @@ namespace ContainerDevice
                 {
                     await deviceClient.OpenAsync().ConfigureAwait(false);
 
-                    // INSERT Setup OnDesiredPropertyChanged Event Handling below here
-                    await deviceClient.SetDesiredPropertyUpdateCallbackAsync(OnDesiredPropertyChanged, null).ConfigureAwait(false);
+                    // Setup device twin callbacks
+                    await deviceClient
+                        .SetDesiredPropertyUpdateCallbackAsync(OnDesiredPropertyChanged, null)
+                        .ConfigureAwait(false);
 
-                    // INSERT Load Device Twin Properties below here
                     var twin = await deviceClient.GetTwinAsync().ConfigureAwait(false);
                     await OnDesiredPropertyChanged(twin.Properties.Desired, null);
 
@@ -66,14 +77,33 @@ namespace ContainerDevice
             }
         }
 
-        // INSERT LoadProvisioningCertificate method below here
+        // The purpose of this method is to load the X.509 certificate from
+        // disk. Should the load succeed, the method returns an instance of the
+        // X509Certificate2 class.
         private static X509Certificate2 LoadProvisioningCertificate()
         {
+            // The X509Certificate2 is a subclass of X509Certificate with
+            // additional functionality that supports both V2 and V3 of the X509
+            // standard.
             var certificateCollection = new X509Certificate2Collection();
-            certificateCollection.Import(certificateFileName, certificatePassword, X509KeyStorageFlags.UserKeySet);
+            // The method creates an instance of the X509Certificate2Collection
+            // class and then attempts to import the certificate file from disk,
+            // using the the hard-coded password. The
+            // X509KeyStorageFlags.UserKeySet values specifies that private keys
+            // are stored in the current user store rather than the local
+            // computer store. This occurs even if the certificate specifies
+            // that the keys should go in the local computer store.
+            certificateCollection.Import(certificateFileName,
+                                         certificatePassword,
+                                         X509KeyStorageFlags.UserKeySet);
 
             X509Certificate2 certificate = null;
 
+            // The method iterates through the imported certificates (in this
+            // case, there should only be one) and verifies that the certificate
+            // has a private key. Should the imported certificate not match this
+            // criteria, an exception is thrown, otherwise the method returns
+            // the imported certificate.
             foreach (X509Certificate2 element in certificateCollection)
             {
                 Console.WriteLine($"Found certificate: {element?.Thumbprint} {element?.Subject}; PrivateKey: {element?.HasPrivateKey}");
@@ -96,10 +126,20 @@ namespace ContainerDevice
             return certificate;
         }
 
-        // INSERT ProvisionDevice method below here
-        private static async Task<DeviceClient> ProvisionDevice(ProvisioningDeviceClient provisioningDeviceClient, SecurityProviderX509Certificate security)
+        // This version of ProvisionDevice is very similar to that you used in
+        // an earlier lab. The primary change is that the security parameter is
+        // now of type SecurityProviderX509Certificate. This means that the auth
+        // variable used to create a DeviceClient must now be of type
+        // DeviceAuthenticationWithX509Certificate and uses the
+        // security.GetAuthenticationCertificate() value. The actual device
+        // registration is the same as before.
+        private static async Task<DeviceClient> ProvisionDevice(
+            ProvisioningDeviceClient provisioningDeviceClient,
+            SecurityProviderX509Certificate security)
         {
-            var result = await provisioningDeviceClient.RegisterAsync().ConfigureAwait(false);
+            var result = await provisioningDeviceClient
+                .RegisterAsync()
+                .ConfigureAwait(false);
             Console.WriteLine($"ProvisioningClient AssignedHub: {result.AssignedHub}; DeviceID: {result.DeviceId}");
             if (result.Status != ProvisioningRegistrationStatusType.Assigned)
             {

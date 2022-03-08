@@ -1,0 +1,93 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "streamingjobs_vibrationJob_name": {
+            "defaultValue": "vibrationJob",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs",
+            "apiVersion": "2017-04-01-preview",
+            "name": "[parameters('streamingjobs_vibrationJob_name')]",
+            "location": "East US",
+            "properties": {
+                "sku": {
+                    "name": "Standard"
+                },
+                "eventsOutOfOrderPolicy": "Adjust",
+                "outputErrorPolicy": "Stop",
+                "eventsOutOfOrderMaxDelayInSeconds": 10,
+                "eventsLateArrivalMaxDelayInSeconds": 5,
+                "dataLocale": "en-US",
+                "compatibilityLevel": "1.1",
+                "contentStoragePolicy": "SystemAccount",
+                "jobType": "Cloud"
+            }
+        },
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs/inputs",
+            "apiVersion": "2017-04-01-preview",
+            "name": "[concat(parameters('streamingjobs_vibrationJob_name'), '/vibrationInput')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.StreamAnalytics/streamingjobs', parameters('streamingjobs_vibrationJob_name'))]"
+            ],
+            "properties": {
+                "type": "Stream",
+                "datasource": {
+                    "type": "Microsoft.Devices/IotHubs",
+                    "properties": {
+                        "iotHubNamespace": "iot-az220-training-dm062121",
+                        "sharedAccessPolicyName": "iothubowner",
+                        "endpoint": "messages/events",
+                        "consumerGroupName": "$Default"
+                    }
+                },
+                "compression": {
+                    "type": "None"
+                },
+                "serialization": {
+                    "type": "Json",
+                    "properties": {
+                        "encoding": "UTF8"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+            "apiVersion": "2017-04-01-preview",
+            "name": "[concat(parameters('streamingjobs_vibrationJob_name'), '/vibrationOutput')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.StreamAnalytics/streamingjobs', parameters('streamingjobs_vibrationJob_name'))]"
+            ],
+            "properties": {
+                "datasource": {
+                    "type": "Microsoft.Storage/Blob",
+                    "properties": {
+                        "storageAccounts": [
+                            {
+                                "accountName": "vibrationstoredm062121"
+                            }
+                        ],
+                        "container": "vibrationcontainer",
+                        "pathPattern": "output/",
+                        "dateFormat": "yyyy/MM/dd",
+                        "timeFormat": "HH",
+                        "authenticationMode": "ConnectionString"
+                    }
+                },
+                "serialization": {
+                    "type": "Json",
+                    "properties": {
+                        "encoding": "UTF8",
+                        "format": "LineSeparated"
+                    }
+                }
+            }
+        }
+    ]
+}
