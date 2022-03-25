@@ -2,12 +2,12 @@
 lab:
   title: 实验室 05：在 DPS 中单独注册设备
   module: 'Module 3: Device Provisioning at Scale'
-ms.openlocfilehash: 6fc4a313720ea0ee30301ab8e8a928bcc9f9a035
-ms.sourcegitcommit: 06dc1e6caa88a09b1246dd1161f15f619db9c6f8
+ms.openlocfilehash: adb1fa9ec38c29ca93b10c86c765b73189c500d1
+ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 02/10/2022
-ms.locfileid: "138421489"
+ms.lasthandoff: 03/24/2022
+ms.locfileid: "140872832"
 ---
 # <a name="individual-enrollment-of-a-device-in-dps"></a>在 DPS 中单独注册设备
 
@@ -43,7 +43,7 @@ Contoso 管理层正在推动更新其现有资产监视和跟踪解决方案。
 
 | 资源类型 | 资源名称 |
 | :-- | :-- |
-| Resource Group | rg-az220 |
+| 资源组 | rg-az220 |
 | IoT 中心 | iot-az220-training-{your-id} |
 | 设备预配服务 | dps-az220-training-{your-id} |
 
@@ -51,7 +51,7 @@ Contoso 管理层正在推动更新其现有资产监视和跟踪解决方案。
 
 1. 在虚拟机环境中，打开 Microsoft Edge 浏览器窗口，然后导航到以下 Web 地址：
  
-    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fbicep%2FAllfiles%2FARM%2Flab05.json+++
+    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fmaster%2FAllfiles%2FARM%2Flab05.json+++
 
     > 注意：每当看到绿色的“T”符号（例如 +++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
 

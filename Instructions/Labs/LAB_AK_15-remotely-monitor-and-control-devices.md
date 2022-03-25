@@ -2,12 +2,12 @@
 lab:
   title: 实验室 15：使用 Azure IoT 中心远程监视和控制设备
   module: 'Module 8: Device Management'
-ms.openlocfilehash: 086ab275071ffdf4b2e1c6259ca15c914d48ddf1
-ms.sourcegitcommit: 06dc1e6caa88a09b1246dd1161f15f619db9c6f8
+ms.openlocfilehash: f0ebccb4b7c7b415397ba0b36ddbb7c96e59717c
+ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 02/10/2022
-ms.locfileid: "138421507"
+ms.lasthandoff: 03/24/2022
+ms.locfileid: "140872799"
 ---
 # <a name="remotely-monitor-and-control-devices-with-azure-iot-hub"></a>使用 Azure IoT 中心远程监视和控制设备
 
@@ -66,7 +66,7 @@ Contoso 已责成你实现自动化系统，以使储藏室环境保持在控制
 
 | 资源类型 | 资源名称 |
 | :-- | :-- |
-| Resource Group | rg-az220 |
+| 资源组 | rg-az220 |
 | IoT 中心 | iot-az220-training-{your-id} |
 | IoT 设备 | sensor-th-0055 |
 
@@ -74,7 +74,7 @@ Contoso 已责成你实现自动化系统，以使储藏室环境保持在控制
 
 1. 在虚拟机环境中，打开 Microsoft Edge 浏览器窗口，然后导航到以下 Web 地址：
  
-    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fbicep%2FAllfiles%2FARM%2Flab15.json+++
+    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fmaster%2FAllfiles%2FARM%2Flab15.json+++
 
     > 注意：每当看到绿色的“T”符号（例如 +++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
 
@@ -333,13 +333,13 @@ Contoso 已责成你实现自动化系统，以使储藏室环境保持在控制
 
     > **注意**：此代码 `var consumerGroup = EventHubConsumerClient.DefaultConsumerGroupName;` 将字符串 `"$Default` 分配给 consumerGroup。 通常的做法是创建自定义使用者组，在本例中，此处将改用使用者组的名称。
 
-    > **信息**：可在[此处](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-features#consumer-groups)详细了解使用者组
+    > **信息**：可在 [此处](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-features#consumer-groups)详细了解使用者组
 
     此 EventHubConsumerClient 类用于从 EventHub（在本例中为 IoT 中心的内置事件中心终结点）读取值 。
 
     EventHubConsumerClient 引用存储在 consumer 变量中 。 接下来，使用 consumer 变量检索分区 ID 字符串的数组，然后将其存储在 d2cPartitions 变量中。 该数组将用于创建将从每个分区接收消息的任务列表。
 
-    > **信息**：可在[此处](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-scaling#partitions)详细了解分区用途。
+    > **信息**：可在 [此处](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-scaling#partitions)详细了解分区用途。
 
     由于从设备向 IoT 中心发送的消息可能由任意分区处理，因此应用必须从每个分区中检索消息。 代码的下一部分创建异步任务列表 - 每个任务将接收来自特定分区的消息。 最后一行将等待所有任务完成 - 由于每个任务将进去无限循环，此行可阻止应用程序退出。
 
@@ -353,7 +353,7 @@ Contoso 已责成你实现自动化系统，以使储藏室环境保持在控制
 
     下一部分从请求的分区读取事件作为异步枚举，从而允许事件在分区上可用时进行迭代，如果没有可用的事件，则在必要时等待。
 
-    > **信息**：可以在[此处](https://docs.microsoft.com/dotnet/csharp/whats-new/csharp-8#asynchronous-streams)详细了解异步流
+    > **信息**：可以在 [此处](https://docs.microsoft.com/dotnet/csharp/whats-new/csharp-8#asynchronous-streams)详细了解异步流
 
     如果接收到事件，则二进制正文数据将转换为字符串并写入控制台 - 当然，在“现实世界”中，JSON 可能会被反序列化等等。 然后循环访问事件数据属性，并且在本例中，应检查事件数据属性以查看值是否为 true - 在当前场景中，这表示警报。 如果发现警报，则将其写入控制台。
 
@@ -436,7 +436,7 @@ Contoso 已责成你实现自动化系统，以使储藏室环境保持在控制
 
     此方法的第一行确定奶酪储藏室风扇当前是否处于“故障”状态 - 奶酪储藏室模拟器制定的假设是，一旦风扇处于故障状态，任何后续命令都将自动失败。 因此，将创建一个“result”属性设置为“Fan Failed”的 JSON 字符串 。 然后会构造一个新的 MethodResponse 对象，该对象的结果字符串编码为一个字节数组和一个 HTTP 状态代码 - 本例中使用 400，在 REST API 的上下文中表示发生一般性客户端错误 。 由于需要直接方法回调才可返回 Task\<MethodResponse\>，因此将创建和返回新任务。
 
-    > **信息**：可在[此处](https://restfulapi.net/http-status-codes/)详细了解如何在 REST API 中使用 HTTP 状态代码。
+    > **信息**：可在 [此处](https://restfulapi.net/http-status-codes/)详细了解如何在 REST API 中使用 HTTP 状态代码。
 
     如果风扇状态并非“故障”，则代码将继续处理在方法请求中发送的数据。 “methodRequest.Data”属性中包含字节数组形式的数据，因此它首先转换为字符串。 在此场景中，该数据应为以下两个值（包括引号）：
 

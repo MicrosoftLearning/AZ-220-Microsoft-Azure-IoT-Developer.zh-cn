@@ -2,12 +2,12 @@
 lab:
   title: 实验室 6：使用 DPS 安全且大规模地自动预配 IoT 设备
   module: 'Module 3: Device Provisioning at Scale'
-ms.openlocfilehash: d8d78212ab65723377fa9262f6c6505d797f2725
-ms.sourcegitcommit: 06dc1e6caa88a09b1246dd1161f15f619db9c6f8
+ms.openlocfilehash: e8e5d66ff173285ebc3c7c40a7815059d899a543
+ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 02/10/2022
-ms.locfileid: "138421537"
+ms.lasthandoff: 03/24/2022
+ms.locfileid: "140872817"
 ---
 # <a name="automatically-provision-iot-devices-securely-and-at-scale-with-dps"></a>使用 DPS 安全且大规模地自动预配 IoT 设备
 
@@ -39,7 +39,7 @@ ms.locfileid: "138421537"
 
 | 资源类型 | 资源名称 |
 | :-- | :-- |
-| Resource Group | rg-az220 |
+| 资源组 | rg-az220 |
 | IoT 中心 | iot-az220-training-{your-id} |
 | 设备预配服务 | dps-az220-training-{your-id} |
 
@@ -47,11 +47,11 @@ ms.locfileid: "138421537"
 
 1. 在虚拟机环境中，打开 Microsoft Edge 浏览器窗口，然后导航到以下 Web 地址：
  
-    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fbicep%2FAllfiles%2FARM%2Flab06.json+++
+    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fmaster%2FAllfiles%2FARM%2Flab06.json+++
 
-    > 注意：每当看到绿色的“T”符号（例如+++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
+    > 注意：每当看到绿色的“T”符号（例如 +++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
 
-1. 如果系统提示登录到 Azure 门户，请输入将要用于本课程的 Azure 凭据。
+1. 如果系统提示登录到 Azure 门户，请输入你在本课程中使用的 Azure 凭据。
 
     将显示“自定义部署”页。
 
@@ -73,7 +73,7 @@ ms.locfileid: "138421537"
 
 1. 在“课程 ID”字段中，输入 az220 。
 
-1. 若要验证模板，请单击“查看并创建”。
+1. 若要验证模板，请单击“查看和创建”。
 
 1. 验证通过后，单击“创建”。
 

@@ -2,12 +2,12 @@
 lab:
   title: 实验室 13：使用 VS Code 在 Azure IoT Edge 上开发、部署和调试自定义模块
   module: 'Module 7: Azure IoT Edge Modules'
-ms.openlocfilehash: 82a9ba817cbebae71e79a4f4d44c2e4e635daba5
-ms.sourcegitcommit: 06dc1e6caa88a09b1246dd1161f15f619db9c6f8
+ms.openlocfilehash: 4908d19567e43a164d559638467ea4d3373c6902
+ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 02/10/2022
-ms.locfileid: "138421483"
+ms.lasthandoff: 03/24/2022
+ms.locfileid: "140872793"
 ---
 # <a name="develop-deploy-and-debug-a-custom-module-on-azure-iot-edge-with-vs-code"></a>使用 VS Code 在 Azure IoT Edge 上开发，部署和调试自定义模块
 
@@ -55,18 +55,18 @@ ms.locfileid: "138421483"
 
 | 资源类型 | 资源名称 |
 | :-- | :-- |
-| Resource Group | rg-az220 |
+| 资源组 | rg-az220 |
 | IoT 中心 | iot-az220-training-{your-id} |
 
 若要确保这些资源可用，请完成以下步骤。
 
 1. 在虚拟机环境中，打开 Microsoft Edge 浏览器窗口，然后导航到以下 Web 地址：
  
-    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fbicep%2FAllfiles%2FARM%2Flab13.json+++
+    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fmaster%2FAllfiles%2FARM%2Flab13.json+++
 
-    > 注意：每当看到绿色的“T”符号（例如+++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
+    > 注意：每当看到绿色的“T”符号（例如 +++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
 
-1. 如果系统提示登录到 Azure 门户，请输入将要用于本课程的 Azure 凭据。
+1. 如果系统提示登录到 Azure 门户，请输入你在本课程中使用的 Azure 凭据。
 
     将显示“自定义部署”页。
 
@@ -88,7 +88,7 @@ ms.locfileid: "138421483"
 
 1. 在“课程 ID”字段中，输入 az220 。
 
-1. 若要验证模板，请单击“查看并创建”。
+1. 若要验证模板，请单击“查看和创建”。
 
 1. 验证通过后，单击“创建”。
 

@@ -2,12 +2,12 @@
 lab:
   title: 实验室 07：设备消息路由
   module: 'Module 4: Message Processing and Analytics'
-ms.openlocfilehash: 4cdc79c81f29a2f2b5b7821894675a3bd2dc9737
-ms.sourcegitcommit: 06dc1e6caa88a09b1246dd1161f15f619db9c6f8
+ms.openlocfilehash: 2601ddbe100553d88feba68b8210fb2c3b70930d
+ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 02/10/2022
-ms.locfileid: "138421486"
+ms.lasthandoff: 03/24/2022
+ms.locfileid: "140872829"
 ---
 # <a name="device-message-routing"></a>设备消息路由
 
@@ -55,7 +55,7 @@ ms.locfileid: "138421486"
 
 | 资源类型 | 资源名称 |
 | :-- | :-- |
-| Resource Group | rg-az220 |
+| 资源组 | rg-az220 |
 | IoT 中心 | iot-az220-training-{your-id} |
 | 设备 ID | sensor-v-3000 |
 
@@ -63,7 +63,7 @@ ms.locfileid: "138421486"
 
 1. 在虚拟机环境中，打开 Microsoft Edge 浏览器窗口，然后导航到以下 Web 地址：
  
-    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fbicep%2FAllfiles%2FARM%2Flab07.json+++
+    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fmaster%2FAllfiles%2FARM%2Flab07.json+++
 
     > 注意：每当看到绿色的“T”符号（例如 +++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
 

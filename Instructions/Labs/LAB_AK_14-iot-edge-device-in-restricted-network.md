@@ -2,12 +2,12 @@
 lab:
   title: 实验室 14：在受限网络和离线环境中运行 IoT Edge 设备
   module: 'Module 7: Azure IoT Edge Module'
-ms.openlocfilehash: 1413872367a9e3f0364b162a1d671fe8d122c469
-ms.sourcegitcommit: 06dc1e6caa88a09b1246dd1161f15f619db9c6f8
+ms.openlocfilehash: 70cd39189546491a832411611137448aa5ab7aa3
+ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 02/10/2022
-ms.locfileid: "138421534"
+ms.lasthandoff: 03/24/2022
+ms.locfileid: "140872825"
 ---
 # <a name="run-an-iot-edge-device-in-restricted-network-and-offline"></a>在受限网络和离线环境中运行 IoT Edge 设备
 
@@ -44,7 +44,7 @@ ms.locfileid: "138421534"
 
 | 资源类型 | 资源名称 |
 | :-- | :-- |
-| Resource Group | rg-az220 |
+| 资源组 | rg-az220 |
 | IoT 中心 | iot-az220-training-{your-id} |
 | IoT Edge 设备 | vm-az220-training-gw0002-{your-id} |
 | IoT 设备 | sensor-th-0084 |
@@ -53,11 +53,11 @@ ms.locfileid: "138421534"
 
 1. 在虚拟机环境中，打开 Microsoft Edge 浏览器窗口，然后导航到以下 Web 地址：
  
-    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fbicep%2FAllfiles%2FARM%2Flab14.json+++
+    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fmaster%2FAllfiles%2FARM%2Flab14.json+++
 
-    > 注意：每当看到绿色的“T”符号（例如+++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
+    > 注意：每当看到绿色的“T”符号（例如 +++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
 
-1. 如果系统提示登录到 Azure 门户，请输入将要用于本课程的 Azure 凭据。
+1. 如果系统提示登录到 Azure 门户，请输入你在本课程中使用的 Azure 凭据。
 
     将显示“自定义部署”页。
 
@@ -123,7 +123,7 @@ ms.locfileid: "138421534"
 
     * 在 Azure 门户菜单上，单击“资源组”。
     * 在“资源组”边栏选项卡上的“名称”下，找到“rg-az220vm”资源组。
-    * 在“rg-az220vm”行上，在边栏选项卡右侧单击“…”，然后单击“固定到仪表板”  。
+    * 在“rg-az220vm”行上，在边栏选项卡右侧单击“...”，然后单击“固定到仪表板”  。
 
     你可能需要编辑仪表板，以使 RG 磁贴和列出的资源更易于访问。
 
@@ -561,17 +561,17 @@ IoT Edge 中心模块 (`$edgeHub`) 用于协调 Azure IoT 服务与网关设备�
 
 #### <a name="task-1-create-hosts-file-entry"></a>任务 1：创建 hosts 文件条目
 
-在本实验室的早期版本中，FQDN 将用作设备连接字符串中 GatewayHostName 的值，但由当前版本的测试脚本生成的测试 x509 证书不再支持此功能。 而是仅使用主机名，并且必须在本地计算机的 hosts 文件中创建一个条目，以将主机名解析为 IP 地址。 完成以下步骤，将所需条目添加到 hosts 文件。
+在本实验室的早期版本中，FQDN 将用作设备连接字符串中 GatewayHostName 的值，但由当前版本的测试脚本生成的测试 x509 证书不再支持此功能。 而是仅使用主机名，并且必须在本地计算机的主机文件中创建一个条目，以将主机名解析为 IP 地址。 完成以下步骤，将所需条目添加到主机文件。
 
 1. 打开 Visual Studio Code。
 
 1. 在“文件”菜单中，单击“打开文件”。
 
-1. 导航到以下文件夹（c:\\Windows\\System32\\Drivers\\etc\\ 文件），然后打开 hosts 文件 。
+1. 导航到以下文件夹（c:\\Windows\\System32\\Drivers\\etc\\ 文件），然后打开主机文件 。
 
-    > 注意：hosts 文件没有扩展名 。
+    > 注意：主机文件没有扩展名 。
 
-1. 将以下行添加到 hosts 文件，后跟一个空行：
+1. 将以下行添加到主机文件，后跟一个空行：
 
     ```text
     {VM Public IP Address} vm-az220-training-gw0002-{your-id}

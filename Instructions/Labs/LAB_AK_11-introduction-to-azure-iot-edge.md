@@ -2,12 +2,12 @@
 lab:
   title: 实验室 11：Azure IoT Edge 简介
   module: 'Module 6: Azure IoT Edge Deployment Process'
-ms.openlocfilehash: acb29f4d9dc7a6989c9927dc6a357b869b1a1567
-ms.sourcegitcommit: 068937341b9739ae7f357ad376bd9a92a0ab5870
+ms.openlocfilehash: e68d422adaff8789d45491214f902c6cf62ebe47
+ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 03/02/2022
-ms.locfileid: "139256861"
+ms.lasthandoff: 03/24/2022
+ms.locfileid: "140872838"
 ---
 # <a name="introduction-to-azure-iot-edge"></a>Azure IoT Edge 简介
 
@@ -53,9 +53,9 @@ ms.locfileid: "139256861"
  
     +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fbicep%2FAllfiles%2FARM%2Flab11.json+++
 
-    > 注意：每当看到绿色的“T”符号（例如+++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
+    > 注意：每当看到绿色的“T”符号（例如 +++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
 
-1. 如果系统提示登录到 Azure 门户，请输入将要用于本课程的 Azure 凭据。
+1. 如果系统提示登录到 Azure 门户，请输入你在本课程中使用的 Azure 凭据。
 
     将显示“自定义部署”页。
 
@@ -67,7 +67,7 @@ ms.locfileid: "139256861"
     >
     > 1. 在“资源组”下拉列表中，选择“新建”。
     > 1. 在“名称”下，输入 rg-az220 。
-    > 1. 单击 **“确定”** 。
+    > 1. 单击“确定”  。
 
 1. 在“实例详细信息”下的“区域”下拉列表中，选择离你最近的区域 。
 
@@ -77,7 +77,7 @@ ms.locfileid: "139256861"
 
 1. 在“课程 ID”字段中，输入 az220 。
 
-1. 若要验证模板，请单击“查看并创建”。
+1. 若要验证模板，请单击“查看和创建”。
 
 1. 验证通过后，单击“创建”。
 
@@ -181,7 +181,7 @@ ms.locfileid: "139256861"
 
 1. 在虚拟机环境中，打开 Microsoft Edge 浏览器窗口，然后导航到以下 Web 地址：
 
-    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fbicep%2FAllfiles%2FARM%2Flab11a.json+++
+    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fmaster%2FAllfiles%2FARM%2Flab11a.json+++
 
 1. 如果系统提示，请登录到“Azure 门户”。
 
@@ -209,7 +209,7 @@ ms.locfileid: "139256861"
 
 1. 在“允许 SSH”字段中，确保选中“true” 。
 
-1. 若要验证模板，请单击“查看并创建”。
+1. 若要验证模板，请单击“查看和创建”。
 
 1. 验证通过后，单击“创建”。
 
