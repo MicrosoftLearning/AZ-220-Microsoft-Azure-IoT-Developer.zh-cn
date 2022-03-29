@@ -2,12 +2,12 @@
 lab:
   title: 实验室 12：设置 IoT Edge 网关
   module: 'Module 6: Azure IoT Edge Deployment Process'
-ms.openlocfilehash: 70d364787ed2a60596d7e194e9c172b28585d13b
-ms.sourcegitcommit: 06dc1e6caa88a09b1246dd1161f15f619db9c6f8
+ms.openlocfilehash: ae46d3ae63028630dd3ab56704f07448d96116c1
+ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 02/10/2022
-ms.locfileid: "138421528"
+ms.lasthandoff: 03/24/2022
+ms.locfileid: "140872820"
 ---
 # <a name="setup-an-iot-edge-gateway"></a>设置 IoT Edge 网关
 
@@ -50,14 +50,14 @@ ms.locfileid: "138421528"
 
 | 资源类型 | 资源名称 |
 | :-- | :-- |
-| Resource Group | rg-az220 |
+| 资源组 | rg-az220 |
 | IoT 中心 | iot-az220-training-{your-id} |
 
 若要确保这些资源可用，请完成以下任务。
 
 1. 在虚拟机环境中，打开 Microsoft Edge 浏览器窗口，然后导航到以下 Web 地址：
  
-    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fbicep%2FAllfiles%2FARM%2Flab12.json+++
+    +++https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fmaster%2FAllfiles%2FARM%2Flab12.json+++
 
     > 注意：每当看到绿色的“T”符号（例如 +++输入此文本+++）时，可以单击关联的文本，信息将键入到虚拟机环境内的当前字段中。
 
@@ -152,7 +152,7 @@ ms.locfileid: "138421528"
 
     消息路由的 `FROM /*` 部分将匹配所有设备到云的消息，或来自任何模块或叶设备的孪生更改通知。 然后，`INTO $upstream` 将指示路由将这些消息发送到 Azure IoT 中心。
 
-    > **注意**：若要详细了解如何在 Azure IoT Edge 中配置消息路由，请参阅[了解如何在 IoT Edge 中部署模块和建立路由](https://docs.microsoft.com/azure/iot-edge/module-composition#declare-routes#declare-routes)一文。
+    > **注意**：若要详细了解如何在 Azure IoT Edge 中配置消息路由，请参阅 [了解如何在 IoT Edge 中部署模块和建立路由](https://docs.microsoft.com/azure/iot-edge/module-composition#declare-routes#declare-routes)一文。
 
 1. 在边栏选项卡底部，单击“查看 + 创建”。
 
@@ -172,11 +172,13 @@ ms.locfileid: "138421528"
 > * [管理 IoT Edge 设备上的证书](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-manage-device-certificates?view=iotedge-2020-11)
 > * [创建演示证书用于测试 IoT Edge 设备功能](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-create-test-certificates?view=iotedge-2020-11)
 
-1. 选择“部署到 Azure”：
+1. 打开 Web 浏览器，然后导航到以下地址： 
 
-    [![部署到 Azure](media/deploytoazure.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fbicep%2FAllfiles%2FARM%2Flab12a.json)
+    ```
+    https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoftLearning%2FAZ-220-Microsoft-Azure-IoT-Developer%2Fmaster%2FAllfiles%2FARM%2Flab12a.json
+    ```
 
-1. 如果系统提示，请登录到“Azure 门户”。
+1. 如有系统提示，请使用本实验室所用的 Azure 凭据登录。
 
     将显示“自定义部署”页。
 
@@ -192,15 +194,15 @@ ms.locfileid: "138421528"
 
 1. 在“虚拟机大小”字段中，确保输入 Standard_DS1_v2 。
 
-1. 在“Ubuntu OS 版本”字段中，确保输入 18.04-LTS 。
+1. 在“Ubuntu OS 版本”字段中，确保输入了“18.04-LTS” 。
 
 1. 在“管理员用户名”字段中，输入用户名。
 
-1. 在“身份验证类型”字段中，确保选择了“密码” 。
+1. 在“身份验证类型”字段中，确保选中“密码” 。
 
 1. 在“管理员密码或密钥”字段中，输入要使用的密码。
 
-1. 在“允许 SSH”字段中，确保选择了“true” 。
+1. 在“允许 SSH”字段中，确保选中“true” 。
 
 1. 若要验证模板，请单击“查看和创建”。
 
@@ -210,7 +212,7 @@ ms.locfileid: "138421528"
 
 1. 模板完成后，导航到“输出”窗格并记下以下内容：
 
-    * 公共 FQDN
+    * 公用 FQDN
     * 公共 SSH
 
 ####
@@ -676,7 +678,7 @@ Azure IoT Edge 支持的 IoT 通信协议具有以下端口映射：
 
     验证存在 X.509 证书之后，将使用 X509Store 类将证书加载到当前用户的证书存储中。 然后，该证书将按需提供，以确保与网关的通信安全 - 这是在设备客户端中自动发生的，因此没有其他代码。
 
-    > **信息**：可以在[此处](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509store?view=netcore-3.1)了解有关 X509Store 类的详细信息。
+    > **信息**：可以在 [此处](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509store?view=netcore-3.1)了解有关 X509Store 类的详细信息。
 
 1. 在“终端”菜单上，单击“新终端”。
 
