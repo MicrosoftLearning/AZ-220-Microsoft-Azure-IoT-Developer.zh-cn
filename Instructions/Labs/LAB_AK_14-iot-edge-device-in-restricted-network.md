@@ -2,12 +2,12 @@
 lab:
   title: 实验室 14：在受限网络和离线环境中运行 IoT Edge 设备
   module: 'Module 7: Azure IoT Edge Module'
-ms.openlocfilehash: 70cd39189546491a832411611137448aa5ab7aa3
-ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
+ms.openlocfilehash: bbcada29239744e2713770d4b512a1804ed195a2
+ms.sourcegitcommit: 913a1097850a27ac5a950d3b589fe67e3f250846
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 03/24/2022
-ms.locfileid: "140872825"
+ms.lasthandoff: 03/25/2022
+ms.locfileid: "141143498"
 ---
 # <a name="run-an-iot-edge-device-in-restricted-network-and-offline"></a>在受限网络和离线环境中运行 IoT Edge 设备
 
@@ -69,7 +69,7 @@ ms.locfileid: "140872825"
     >
     > 1. 在“资源组”下拉列表中，选择“新建”。
     > 1. 在“名称”下，输入 rg-az220 。
-    > 1. 单击“确定”  。
+    > 1. 单击 **“确定”** 。
 
 1. 在“实例详细信息”下的“区域”下拉列表中，选择离你最近的区域 。
 
@@ -322,8 +322,8 @@ ms.locfileid: "140872825"
 
 1. 要下载根证书供稍后在此实验室中使用，请输入以下命令：
 
-    ```bashd
-    download ~/lab12/
+    ```bash
+    download ~/lab12/azure-iot-test-only.root.ca.cert.pem
     ```
 
 ### <a name="exercise-3-configure-iot-edge-device-time-to-live-and-message-storage"></a>练习 3：配置 IoT Edge 设备生存时间和消息存储
