@@ -2,12 +2,12 @@
 lab:
   title: 实验室 12：设置 IoT Edge 网关
   module: 'Module 6: Azure IoT Edge Deployment Process'
-ms.openlocfilehash: ae46d3ae63028630dd3ab56704f07448d96116c1
-ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
+ms.openlocfilehash: a710ea3e39a2c63da58925f669b7bdb8f983a4e7
+ms.sourcegitcommit: b9f2c53cb54dde700e21476bcc7435310d15445d
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 03/24/2022
-ms.locfileid: "140872820"
+ms.lasthandoff: 04/11/2022
+ms.locfileid: "141604966"
 ---
 # <a name="setup-an-iot-edge-gateway"></a>设置 IoT Edge 网关
 
@@ -73,7 +73,7 @@ ms.locfileid: "140872820"
     >
     > 1. 在“资源组”下拉列表中，选择“新建”。
     > 1. 在“名称”下，输入 rg-az220 。
-    > 1. 单击“确定”  。
+    > 1. 单击 **“确定”** 。
 
 1. 在“实例详细信息”下的“区域”下拉列表中，选择离你最近的区域 。
 
@@ -626,9 +626,7 @@ Azure IoT Edge 支持的 IoT 通信协议具有以下端口映射：
 
 1. 找到 connectionString 变量的声明，然后将占位符的值替换为 sensor-th-0072 IoT 设备的主连接字符串 。
 
-1. 将分配的 connectionString 值附加到 GatewayHostName 属性，然后将 GatewayHostName 的值设置为 IoT Edge 网关设备的完整 DNS 名称 。
-
-    Edge 网关设备的完整 DNS 名称是在设备 ID（即 vm-az220-training-gw0001-{your-id}）后附加指定的区域和 Azure 商业云域名，例如：.westus2.cloudapp.azure.com 。
+1. 将分配的 connectionString 值附加到 GatewayHostName 属性，然后将 GatewayHostName 的值设置为 IoT Edge 网关设备的名称。  此名称必须与本实验室前面在 Hosts 文件中提供的名称匹配。
 
     完整的连接字符串值应为以下格式：
 

@@ -2,12 +2,12 @@
 lab:
   title: 实验室 14：在受限网络和离线环境中运行 IoT Edge 设备
   module: 'Module 7: Azure IoT Edge Module'
-ms.openlocfilehash: bbcada29239744e2713770d4b512a1804ed195a2
-ms.sourcegitcommit: 913a1097850a27ac5a950d3b589fe67e3f250846
+ms.openlocfilehash: ed1a6e21e83fc4b9f0fa22edf68da4ac946adf65
+ms.sourcegitcommit: b9f2c53cb54dde700e21476bcc7435310d15445d
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 03/25/2022
-ms.locfileid: "141143498"
+ms.lasthandoff: 04/11/2022
+ms.locfileid: "141604969"
 ---
 # <a name="run-an-iot-edge-device-in-restricted-network-and-offline"></a>在受限网络和离线环境中运行 IoT Edge 设备
 
@@ -623,14 +623,12 @@ IoT Edge 中心模块 (`$edgeHub`) 用于协调 Azure IoT 服务与网关设备�
 
 1. 将 IoT 设备 sensor-th-0084 的占位符值替换为主连接字符串。
 
-1. 将分配的 connectionString 值附加到 GatewayHostName 属性，然后将 GatewayHostName 的值设置为 IoT Edge 网关设备的完整 DNS 名称 。
-
-    Edge 网关设备的完整 DNS 名称是在设备 ID（即 vm-az220-training-gw0002-{your-id}）后附加指定的区域和 Azure 商业云域名，例如：.westus2.cloudapp.azure.com 。
+1. 将分配的 connectionString 值附加到 GatewayHostName 属性，然后将 GatewayHostName 的值设置为 IoT Edge 网关设备的名称。  此名称必须与本实验室前面在 Hosts 文件中提供的名称匹配。
 
     完整的连接字符串值应为以下格式：
 
     ```text
-    HostName=<IoT-Hub-Name>.azure-devices.net;DeviceId=sensor-th-0072;SharedAccessKey=<Primary-Key-for-IoT-Device>;GatewayHostName=<DNS-Name-for-IoT-Edge-Device>
+    HostName=<IoT-Hub-Name>.azure-devices.net;DeviceId=sensor-th-0072;SharedAccessKey=<Primary-Key-for-IoT-Device>;GatewayHostName=<Name-for-IoT-Edge-Device>
     ```
 
     请务必使用适当的值替换上述占位符：
