@@ -2,12 +2,12 @@
 lab:
   title: 实验室 11：Azure IoT Edge 简介
   module: 'Module 6: Azure IoT Edge Deployment Process'
-ms.openlocfilehash: e68d422adaff8789d45491214f902c6cf62ebe47
-ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
+ms.openlocfilehash: a223c0aa8abc8c5a16e81d343a0f94a6b9bbdf36
+ms.sourcegitcommit: 88ea18cdadb26810b563a54c06ce5e98344bcd92
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 03/24/2022
-ms.locfileid: "140872838"
+ms.lasthandoff: 03/29/2022
+ms.locfileid: "141258552"
 ---
 # <a name="introduction-to-azure-iot-edge"></a>Azure IoT Edge 简介
 
@@ -67,7 +67,7 @@ ms.locfileid: "140872838"
     >
     > 1. 在“资源组”下拉列表中，选择“新建”。
     > 1. 在“名称”下，输入 rg-az220 。
-    > 1. 单击“确定”  。
+    > 1. 单击 **“确定”** 。
 
 1. 在“实例详细信息”下的“区域”下拉列表中，选择离你最近的区域 。
 
@@ -317,7 +317,7 @@ ms.locfileid: "140872838"
 
     我们将命名自定义模块“tempsensor”
 
-1. 在“映像 URI”处输入 **asaedgedockerhubtest/asa-edge-test-module:simulated-temperature-sensor**
+1. 在“映像 URI”下，输入 mcr.microsoft.com/azureiotedge-simulated-temperature-sensor 
 
     > **注意**：此映像是 Docker Hub 上的已发布映像，该映像由产品组提供以支持此测试方案。
 

@@ -2,12 +2,12 @@
 lab:
   title: 实验室 04：将 IoT 设备连接到 Azure
   module: 'Module 2: Devices and Device Communication'
-ms.openlocfilehash: bae15d047d1666351e9ecb817c45621974c0fe7d
-ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
+ms.openlocfilehash: 024b4b28e920cb7193c1272bec4fde3d697d93ec
+ms.sourcegitcommit: b1a2557baf4854683036fde125ada75c6f3dbbfd
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 03/24/2022
-ms.locfileid: "140872790"
+ms.lasthandoff: 03/28/2022
+ms.locfileid: "141200491"
 ---
 # <a name="connect-an-iot-device-to-azure"></a>将 IoT 设备连接到 Azure
 
@@ -68,7 +68,7 @@ Contoso 已决定启动使用 IoT 设备监控温度和湿度的自动化系统�
     >
     > 1. 在“资源组”下拉列表中，选择“新建”。
     > 1. 在“名称”下，输入 rg-az220 。
-    > 1. 单击“确定”  。
+    > 1. 单击 **“确定”** 。
 
 1. 在“实例详细信息”下的“区域”下拉列表中，选择离你最近的区域 。
 
@@ -209,7 +209,9 @@ Contoso 已决定启动使用 IoT 设备监控温度和湿度的自动化系统�
     dotnet add package Microsoft.Azure.Devices.Client
     ```
 
-    > **注意**：Microsoft.Azure.Devices.Client 包包含适用于 .NET 的 Azure IoT 设备 SDK，并且有一个作为依赖项的 Newtonsoft.Json 包 。 Newtonsoft.Json 包包含可帮助创建和操作 JSON 的 API。
+    > **注意**：Microsoft.Azure.Devices.Client 包包含适用于 .NET 的 Azure IoT 设备 SDK，并且有一个作为依赖项的 Newtonsoft.Json 包 。 Newtonsoft.Json 包包含可帮助创建和操作 JSON 的 API。 如有必要，使用 `dotnet add package Newtonsoft.Json` 安装 Newtonsoft.Json 包。
+
+    > **重要说明**：如果收到“包没有可用的版本”错误，则可能需要更新开发环境中的 Nuget 配置文件。 运行以下命令（然后重试 dotnet add package 命令）：`dotnet nuget add source --name nuget.org https://api.nuget.org/v3/index.json`
 
     在下一个任务中，你将构建并测试你的模拟设备应用。
 
@@ -289,7 +291,7 @@ Contoso 已决定启动使用 IoT 设备监控温度和湿度的自动化系统�
     ```csharp
     using System;
 
-    namespace CaveSensor
+    namespace CaveDevice
     {
         class Program
         {
@@ -309,7 +311,7 @@ Contoso 已决定启动使用 IoT 设备监控温度和湿度的自动化系统�
         System.Console.WriteLine("Hello World!");
         ```
 
-    * `namespace` 区域 - 指定命名空间之后使用 `{ }` 包含的类是该命名空间的一部分。 因此，与控制台是 System 命名空间的一部分类似，在上面的示例中，Program 类是 CaveSensor 命名空间的一部分，其全名是 CaveSensor.Program    。
+    * `namespace` 区域 - 指定命名空间之后使用 `{ }` 包含的类是该命名空间的一部分。 因此，与控制台是 System 命名空间的一部分类似，在上面的示例中，Program 类是 CaveDevice 命名空间的一部分，其全名为 CaveDevice.Program    。
 
     * `class` 区域 - 定义 Program 类的内容。 一个源文件中可以有多个类
 
@@ -358,23 +360,16 @@ Contoso 已决定启动使用 IoT 设备监控温度和湿度的自动化系统�
 
     ```csharp
     // INSERT using statements below here
-
     namespace CaveDevice
     {
         class Program
         {
             // INSERT variables below here
-
             // INSERT Main method below here
-
             // INSERT SendDeviceToCloudMessagesAsync method below here
-
             // INSERT CreateMessageString method below here
-
         }
-
         // INSERT EnvironmentSensor class below here
-
     }
     ```
 
@@ -417,7 +412,7 @@ Contoso 已决定启动使用 IoT 设备监控温度和湿度的自动化系统�
 
     deviceClient 变量用于存储 DeviceClient 的实例 - 该类来自 Azure IoT 设备 SDK，并且包含设备可用于向 IoT 中心发送消息和从 IoT 中心接收消息的方法 。
 
-    connectionString 变量将包含之前创建的设备的连接字符串。 DeviceClient 使用此值连接到 IoT 中心。
+    connectionString 变量将包含之前创建的设备的连接字符串。 DeviceClient 使用此值连接到 IoT 中心。 你将在下一步中指定 connectionStrin 的值。
 
     > **重要说明**：在本课程中，你将在本实验室和其他实验室中看到相关示例，其中连接字符串、密码和其他配置信息均硬编码到应用程序中。 这样做只是为了简化实验室，我们并不推荐这种做法。 像这样的安全问题将尽可能在其出现在实验室中时得到解决。 安全主题（和其他重要的注意事项）将以支持课程整体流程的方式，在讲师演示和学生手册的内容中进行阐述。 这两者可能并不总是完全一致。 因此，你可能会在实验室中接触到一些直到课程后期才会详细介绍的主题。
 

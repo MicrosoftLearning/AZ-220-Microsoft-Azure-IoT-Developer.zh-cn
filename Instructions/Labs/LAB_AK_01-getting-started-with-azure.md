@@ -2,12 +2,12 @@
 lab:
   title: 实验室 01：Azure 入门
   module: 'Module 1: Introduction to IoT and Azure IoT Services'
-ms.openlocfilehash: 53ff1594e2de722cc0f4f2fe362024fe90ae37c1
-ms.sourcegitcommit: 06dc1e6caa88a09b1246dd1161f15f619db9c6f8
+ms.openlocfilehash: dbeadf10eec7ddeea74c009b635028adea578407
+ms.sourcegitcommit: 88ea18cdadb26810b563a54c06ce5e98344bcd92
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 02/10/2022
-ms.locfileid: "138421477"
+ms.lasthandoff: 03/29/2022
+ms.locfileid: "141258549"
 ---
 # <a name="getting-started-with-azure"></a>Azure 入门
 
@@ -106,7 +106,7 @@ ms.locfileid: "138421477"
 
     > **提示**：当你将新项目添加到收藏列表时，它将放在 Azure 门户菜单上收藏列表的底部。 你可以通过拖放操作将收藏列表重新排列为所需的顺序。
 
-1. 也可以按照相同的过程将以下服务添加到收藏列表：设备预配服务、逻辑应用和流分析作业  。
+1. 也可以按照相同的过程将以下服务添加到收藏列表：Azure IoT 中心设备预配服务、逻辑应用和流分析作业  。
 
     > **注意**：你可以通过单击所选服务的星形图标将该服务从收藏服务列表中移除。
 
@@ -175,7 +175,7 @@ ms.locfileid: "138421477"
 
     在接下来的步骤中，将手动将磁贴添加到仪表板。 另一种做法是使用拖放操作将磁贴库中的磁贴添加到提供的空间。
 
-1. 在仪表板编辑器顶部，单击“完成自定义”。
+1. 在仪表板编辑器顶部，单击“完成自定义”，然后选择“保存” 。
 
     此时会看到一个空的仪表板。
 
@@ -224,7 +224,9 @@ ms.locfileid: "138421477"
 
     > **注意**：不建议你在新边栏选项卡中将资源组打开，只要将其选中即可（左侧的对勾）。
 
-1. 在屏幕右侧，单击与资源组相对应的省略号 (...)，然后单击“固定到仪表板”
+1. 在屏幕右侧，单击与资源组相对应的省略号 (...)，然后单击“固定到仪表板”。
+ 
+1. 确保已选择创建的仪表板，然后选择“固定”。
 
 1. 关闭“资源组”边栏选项卡。
 

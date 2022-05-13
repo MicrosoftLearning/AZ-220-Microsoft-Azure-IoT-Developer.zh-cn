@@ -2,12 +2,12 @@
 lab:
   title: 实验室 6：使用 DPS 安全且大规模地自动预配 IoT 设备
   module: 'Module 3: Device Provisioning at Scale'
-ms.openlocfilehash: e8e5d66ff173285ebc3c7c40a7815059d899a543
-ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
+ms.openlocfilehash: 5e9c0a761111d5763f2e313cc249052b9ea61e30
+ms.sourcegitcommit: b1a2557baf4854683036fde125ada75c6f3dbbfd
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 03/24/2022
-ms.locfileid: "140872817"
+ms.lasthandoff: 03/28/2022
+ms.locfileid: "141200494"
 ---
 # <a name="automatically-provision-iot-devices-securely-and-at-scale-with-dps"></a>使用 DPS 安全且大规模地自动预配 IoT 设备
 
@@ -63,7 +63,7 @@ ms.locfileid: "140872817"
     >
     > 1. 在“资源组”下拉列表中，选择“新建”。
     > 1. 在“名称”下，输入 rg-az220 。
-    > 1. 单击“确定”  。
+    > 1. 单击 **“确定”** 。
 
 1. 在“实例详细信息”下的“区域”下拉列表中，选择离你最近的区域 。
 
@@ -391,14 +391,14 @@ ms.locfileid: "140872817"
 
     现在复制这两个证书文件可节省一些时间，但在最初构建的代码项目中，只使用第一个文件 `sensor-thl-2000-device.cert.pfx`。
 
-1. 在文件资源管理器中，导航到实验室 6（在 DPS 中自动注册设备）的 Starter 文件夹。
+1. 在文件资源管理器中，导航到实验室 6（在 DPS 中自动注册设备）的 Final 文件夹。
 
     在“实验室 3:设置开发环境”中，你可以通过下载 ZIP 文件并从本地提取内容来克隆包含实验室资源的 GitHub 存储库。 提取的文件夹结构包括以下文件夹路径：
 
     * Allfiles
       * 实验室
           * 06 - 在 DPS 中自动注册设备
-            * 初学者
+            * 最后
               * ContainerDevice
 
 1. 在打开的 ContainerDevice 文件夹中粘贴复制的设备证书文件。
@@ -409,7 +409,7 @@ ms.locfileid: "140872817"
 
 1. 在“文件”菜单上，单击“打开文件夹”
 
-1. 在“打开文件夹”对话框中，导航到实验室 6（在 DPS 中自动注册设备）的 Starter 文件夹。
+1. 在“打开文件夹”对话框中，导航到实验室 6（DPS 中的设备自动注册）的 Final 文件夹。
 
 1. 单击“ContainerDevice”，然后单击“选择文件夹”。
 
@@ -497,14 +497,14 @@ ms.locfileid: "140872817"
 
 1. 打开 Windows 文件资源管理器。
 
-1. 在文件资源管理器中，导航到实验室 6（在 DPS 中自动注册设备）的 Starter 文件夹。
+1. 在文件资源管理器中，导航到实验室 6（在 DPS 中自动注册设备）的 Final 文件夹。
 
     在“实验室 3:设置开发环境”中，你可以通过下载 ZIP 文件并从本地提取内容来克隆包含实验室资源的 GitHub 存储库。 提取的文件夹结构包括以下文件夹路径：
 
     * Allfiles
       * 实验室
           * 06 - 在 DPS 中自动注册设备
-            * 初学者
+            * 最后
 
 1. 右键单击“ContainerDevice”，然后单击“复制”。
 
@@ -522,7 +522,7 @@ ms.locfileid: "140872817"
 
 1. 在“文件”菜单上，单击“打开文件夹”。
 
-1. 导航到“lab 6 Starter”文件夹。
+1. 导航到实验室 6 Final 文件夹。
 
 1. 单击“ContainerDevice2001”，然后单击“选择文件夹”。
 
@@ -560,7 +560,7 @@ ms.locfileid: "140872817"
 
 1. 在“文件”菜单上，单击“打开文件夹”。
 
-1. 导航到“lab 6 Starter”文件夹。
+1. 导航到实验室 6 Final 文件夹。
 
 1. 单击“ContainerDevice”，然后单击“选择文件夹”。
 
@@ -572,7 +572,7 @@ ms.locfileid: "140872817"
 
     此时会看到如下所示的内容：
 
-    `Allfiles\Labs\06-Automatic Enrollment of Devices in DPS\Starter\ContainerDevice>`
+    `Allfiles\Labs\06-Automatic Enrollment of Devices in DPS\Final\ContainerDevice>`
 
 1. 要生成并运行“ContainerDevice”项目，请输入以下命令：
 
@@ -647,7 +647,7 @@ ms.locfileid: "140872817"
 
 1. 在新 Visual Studio Code 窗口中的“文件”菜单上，单击“打开文件夹”。
 
-1. 导航到“lab 6 Starter”文件夹。
+1. 导航到实验室 6 Final 文件夹。
 
 1. 单击“ContainerDevice2001”，然后单击“选择文件夹”。
 
@@ -659,7 +659,7 @@ ms.locfileid: "140872817"
 
     此时会看到如下所示的内容：
 
-    `Allfiles\Labs\06-Automatic Enrollment of Devices in DPS\Starter\ContainerDevice2001>`
+    `Allfiles\Labs\06-Automatic Enrollment of Devices in DPS\Final\ContainerDevice2001>`
 
 1. 要生成并运行“ContainerDevice”项目，请输入以下命令：
 
@@ -864,8 +864,8 @@ ms.locfileid: "140872817"
     ProvisioningClient AssignedHub: ; DeviceID:
     Unhandled exception. System.Exception: DeviceRegistrationResult.Status is NOT 'Assigned'
     at ContainerDevice.Program.ProvisionDevice(ProvisioningDeviceClient provisioningDeviceClient, SecurityProviderX509Certificate security) in C:\Users\howdc\Allfiles\Labs\06-Automatic Enrollment of Devices
-    in DPS\Starter\ContainerDevice2004\Program.cs:line 107
-    at ContainerDevice.Program.Main(String[] args) in C:\Users\howdc\Allfiles\Labs\06-Automatic Enrollment of Devices in DPS\Starter\ContainerDevice2004\Program.cs:line 49
+    in DPS\Final\ContainerDevice2004\Program.cs:line 107
+    at ContainerDevice.Program.Main(String[] args) in C:\Users\howdc\Allfiles\Labs\06-Automatic Enrollment of Devices in DPS\Final\ContainerDevice2004\Program.cs:line 49
     at ContainerDevice.Program.<Main>(String[] args)
     ```
 
@@ -934,7 +934,7 @@ ms.locfileid: "140872817"
 
 1. 切换到包含 ContainerDevice 代码项目的“Visual Studio Code”窗口。
 
-    如果在上一练习后关闭了 Visual Studio Code，请使用 Visual Studio Code 打开实验室 6 启动程序文件夹。
+    如果在上一练习后关闭了 Visual Studio Code，请使用 Visual Studio Code 打开实验室 6 Final 文件夹。
 
 1. 在 Visual Studio Code 的“视图”菜单上，单击“终端”。
 
