@@ -2,12 +2,12 @@
 lab:
   title: 实验室 03：设置开发环境
   module: 'Module 2: Devices and Device Communication'
-ms.openlocfilehash: 4319c13ddf4eeea8487c677b5f05d88bc386d3d3
-ms.sourcegitcommit: 06dc1e6caa88a09b1246dd1161f15f619db9c6f8
+ms.openlocfilehash: ff8debfc695c847537f93449f9849775b2945b9c
+ms.sourcegitcommit: 7281efeb9cb5654361c2f1aa93aea724a3898966
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 02/10/2022
-ms.locfileid: "138421555"
+ms.lasthandoff: 05/31/2022
+ms.locfileid: "145955879"
 ---
 # <a name="set-up-the-development-environment"></a>设置开发环境
 
@@ -284,11 +284,7 @@ Azure CLI 是一种命令行工具，旨在简化 Azure 相关任务的脚本编
 
     你可以使用 Windows 设置打开“Windows 功能”对话框，并使用它来验证是否启用了 Hyper-V 和容器。
 
-1. 单击“从 Docker Hub 下载”
-
-1. 在适用于 Windows 的 Docker 桌面下，单击“获取适用于 Windows 的 Docker 桌面（稳定）”。
-
-1. 要开始安装，请单击“运行”。
+1. 单击 **Docker Desktop for Windows**，然后按照屏幕上的说明打开并运行下载的安装文件。
 
     可能需要一段时间才能显示 Docker Desktop 的安装对话框。
 
@@ -467,7 +463,7 @@ Microsoft 已经创建了一个 GitHub 存储库来提供对实验室资源文�
 
 1. 请单击“浏览”，然后导航到方便访问的文件夹位置。
 
-    > **重要说明**：默认情况下，Windows 的[最大文件路径长度为 260](https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#maximum-path-length-limitation)。 由于 ZIP 中的文件路径已经很长，请避免在具有大文件路径的嵌套文件夹中提取存档。 例如，提示提取 zip 的默认路径可能类似于 c:\users\\[username]\downloads\AZ-220-Microsoft-Azure-IoT-Developer-master - 建议尽量缩短此路径，例如 c:\az220 
+    > **重要说明**：默认情况下，Windows 的 [最大文件路径长度为 260](https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#maximum-path-length-limitation)。 由于 ZIP 中的文件路径已经很长，请避免在具有大文件路径的嵌套文件夹中提取存档。 例如，提示提取 zip 的默认路径可能类似于 c:\users\\[username]\downloads\AZ-220-Microsoft-Azure-IoT-Developer-master - 建议尽量缩短此路径，例如 c:\az220 
 
 1. 要提取文件，请单击“提取”。
 
