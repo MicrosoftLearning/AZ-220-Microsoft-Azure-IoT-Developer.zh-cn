@@ -2,12 +2,12 @@
 lab:
   title: 实验室 13：使用 VS Code 在 Azure IoT Edge 上开发、部署和调试自定义模块
   module: 'Module 7: Azure IoT Edge Modules'
-ms.openlocfilehash: 4908d19567e43a164d559638467ea4d3373c6902
-ms.sourcegitcommit: eec2943250f1cd1ad2c5202ecbb9c37af71e8961
+ms.openlocfilehash: 9586c15c0e16a0bdbe7850a0c28af480dcf34086
+ms.sourcegitcommit: 7281efeb9cb5654361c2f1aa93aea724a3898966
 ms.translationtype: HT
 ms.contentlocale: zh-CN
-ms.lasthandoff: 03/24/2022
-ms.locfileid: "140872793"
+ms.lasthandoff: 05/31/2022
+ms.locfileid: "145955882"
 ---
 # <a name="develop-deploy-and-debug-a-custom-module-on-azure-iot-edge-with-vs-code"></a>使用 VS Code 在 Azure IoT Edge 上开发，部署和调试自定义模块
 
@@ -176,7 +176,7 @@ Azure 容器注册表为容器部署提供专用 Docker 映像的存储。 Azure
 
     要提供全局唯一名称，请输入 +++acraz220training{your-id}+++。
 
-    例如：acraz220trainingcah191204
+    例如：acraz220trainingcah220531
 
     Azure 容器注册表的名称必须是全局唯一的，因为它是公共可访问的资源，你必须能够从任何 IP 连接的设备访问该资源。
 
@@ -212,7 +212,7 @@ Azure 容器注册表为容器部署提供专用 Docker 映像的存储。 Azure
 
 1. 在“管理员用户”菜单下，单击“启用”。
 
-    使用此选项，你可以使用注册表名称作为用户名及管理员用户访问密钥作为密码将 Docker 登录到 Azure 容器注册表服务。
+    使用此选项，你可以使用注册表名称作为用户名及管理员用户访问密钥作为密码登录到 Azure 容器注册表服务。
 
 1. 记录下列值：
 

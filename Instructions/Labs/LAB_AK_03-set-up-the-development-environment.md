@@ -284,7 +284,7 @@ Azure CLI 是一种命令行工具，旨在简化 Azure 相关任务的脚本编
 
     你可以使用 Windows 设置打开“Windows 功能”对话框，并使用它来验证是否启用了 Hyper-V 和容器。
 
-1. 单击 **Docker Desktop for Windows**，然后按照屏幕上的说明打开并运行下载的安装文件。
+1. 单击“适用于 Windows 的 Docker Desktop”，然后按照屏幕上的说明打开并运行下载的安装文件。
 
     可能需要一段时间才能显示 Docker Desktop 的安装对话框。
 
