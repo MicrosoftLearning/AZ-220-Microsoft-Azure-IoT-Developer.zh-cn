@@ -2,13 +2,8 @@
 lab:
   title: 实验室 18：使用 Azure Defender for IoT 检测 IoT 设备是否被篡改
   module: 'Module 10: Azure Defender and IoT Security'
-ms.openlocfilehash: c1a1aa4fe7f487f4ab2c99ff62cd881b289ea80f
-ms.sourcegitcommit: b1a2557baf4854683036fde125ada75c6f3dbbfd
-ms.translationtype: HT
-ms.contentlocale: zh-CN
-ms.lasthandoff: 03/28/2022
-ms.locfileid: "141200497"
 ---
+
 # <a name="detect-device-tampering-with-azure-defender-for-iot"></a>使用 Azure Defender for IoT 检测设备篡改情况
 
 ## <a name="lab-scenario"></a>实验室场景
@@ -251,7 +246,7 @@ Azure Defender for IoT 由以下组件构成：
 
     还有许多其他方法可以打开 IoT 中心边栏选项卡，可以使用你喜欢的任何方法。
 
-1. 在左侧菜单中的“设备管理”下，单击“设备” 。
+1. 在左侧菜单中的“设备管理”下，单击“设备” ****  **** 。
 
 1. 在“设备”窗格顶部，单击“+ 添加设备” 
 
@@ -259,7 +254,7 @@ Azure Defender for IoT 由以下组件构成：
 
     是的，你要使用分配给 VM 的名称作为设备 ID。
 
-    你将使用 **对称密钥** 进行身份验证，因此可以保留其他设置的默认值。
+    你将使用**对称密钥**进行身份验证，因此可以保留其他设置的默认值。
 
 1. 在边栏选项卡顶部，单击“保存”。
 
@@ -451,7 +446,7 @@ Azure Defender for IoT 为通过 IoT 中心记录、处理、聚合和发送安�
     * 安装必备组件。
     * 添加服务用户（在禁用交互式登录的情况下）。
     * 安装用作守护程序的代理 - 假设设备使用 **systemd** 进行服务管理。
-    * 配置 **sudo 用户** 以允许代理以 root 身份执行某些任务。
+    * 配置 **sudo 用户**以允许代理以 root 身份执行某些任务。
     * 使用提供的身份验证参数配置代理。
 
 1. 通过查看 Cloud Shell 终端中的输出观察命令进度。
@@ -486,7 +481,7 @@ Azure Defender for IoT 为通过 IoT 中心记录、处理、聚合和发送安�
 
     具体来说，你应该验证该服务是否是 Loaded: loaded 和 Active: active (running)。
 
-    > **注意**：如果 Azure Defender for IoT 代理未运行或未处于活动状态，请查看 [为 Linux 部署 Defender for IoT 基于 C# 的安全代理](https://docs.microsoft.com/en-us/azure/defender-for-iot/device-builders/how-to-deploy-linux-cs)。 常见问题是可能会造成服务 Active: activating 的键值错误或未指定完整的 IoT 中心主机名。
+    > **注意**：如果 Azure Defender for IoT 代理未运行或未处于活动状态，请查看[为 Linux 部署 Defender for IoT 基于 C# 的安全代理](https://docs.microsoft.com/en-us/azure/defender-for-iot/device-builders/how-to-deploy-linux-cs)。 常见问题是可能会造成服务 Active: activating 的键值错误或未指定完整的 IoT 中心主机名。
 
 1. 在 Azure 门户中，导航回 IoT 中心边栏选项卡，然后打开 vm-az220-training-edge0002-{your-id} 设备边栏选项卡。
 
@@ -598,7 +593,7 @@ Azure Defender for IoT 为基于 Azure 的 IoT 解决方案提供端到端安全
 
 1. 花点时间检查一下“自定义提醒”窗格。
 
-    该窗格乍看可能是空的，但“名称”下列出的项目实际上是为你自动创建的 **默认** 安全组。
+    该窗格乍看可能是空的，但“名称”下列出的项目实际上是为你自动创建的**默认**安全组。
 
     使用安全组可以定义设备的逻辑组，并集中管理设备的安全状态。 这些组可以表示具有特定硬件的设备、部署在某个位置的设备，或适合具体需求的其他任何组。
 
@@ -654,7 +649,7 @@ Azure Defender for IoT 为基于 Azure 的 IoT 解决方案提供端到端安全
 
 1. 在 Azure 门户菜单上，单击“仪表板”，然后打开 IoT 中心。
 
-1. 在左侧菜单中的“设备管理”下，单击“设备” 。
+1. 在左侧菜单中的“设备管理”下，单击“设备” ****  **** 。
 
 1. 在“IoT 设备”窗格顶部，单击“+ 添加设备” 
 
